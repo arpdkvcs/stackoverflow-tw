@@ -27,11 +27,13 @@ CREATE TABLE IF NOT EXISTS user_sessions
 
 CREATE TABLE IF NOT EXISTS questions
 (
-    id         BIGSERIAL PRIMARY KEY,
-    user_id    BIGINT                              NOT NULL,
-    title      VARCHAR(100)                        NOT NULL,
-    content    TEXT                                NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    id                 BIGSERIAL PRIMARY KEY,
+    user_id            BIGINT                              NOT NULL,
+    title              VARCHAR(100)                        NOT NULL,
+    content            TEXT                                NOT NULL,
+    created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    accepted_answer_id BIGINT,
+    FOREIGN KEY (accepted_answer_id) REFERENCES answers (id),
     FOREIGN KEY (user_id) references users (id) ON DELETE CASCADE
 );
 
@@ -44,4 +46,19 @@ CREATE TABLE IF NOT EXISTS answers
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) references users (id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) references questions (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS tags
+(
+    id   BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS questions_tags
+(
+    question_id BIGINT NOT NULL,
+    tag_id      BIGINT NOT NULL,
+    PRIMARY KEY (question_id, tag_id),
+    FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE
 );
