@@ -12,6 +12,12 @@
 - Modify the port and database values
 - Run main
 
+### Frontend setup
+- run 'npm i' in 'sof-frontend directory' 
+- rename env.txt according to instructions
+- start backend (run StackoverflowTwApplication.java class)
+- run npm start
+
 ### Tasks:
 
 - [ ] Main page listing all questions with details, date and answer count

@@ -29,7 +29,7 @@ function QuestionsList() {
             <ul>
                 {questions.map((question) => (
                     <li key={question.id}>
-                        Title: {question.title}
+                        Title: {question.title} ---
                         Content: {question.content}
                     </li>
                 ))}
