@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS questions_tags;
 DROP TABLE IF EXISTS tags;
-ALTER TABLE questions DROP CONSTRAINT IF EXISTS questions_accepted_answer_id_fkey;
+ALTER TABLE IF EXISTS questions DROP CONSTRAINT IF EXISTS questions_accepted_answer_id_fkey;
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS user_sessions;
