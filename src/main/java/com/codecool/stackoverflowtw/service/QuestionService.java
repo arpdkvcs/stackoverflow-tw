@@ -7,6 +7,7 @@ import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
 import com.codecool.stackoverflowtw.dao.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -32,20 +33,27 @@ public class QuestionService {
     }
 
     public Set<QuestionResponseDTO> getAllQuestions() throws SQLException {
-        Set<QuestionModel> questionModels = questionsDAO.readAll();
-        Set<QuestionResponseDTO> questionResponseDTOs = new HashSet<>();
 
-        for (QuestionModel questionModel : questionModels) {
-            long id = questionModel.getId();
-            String title = questionModel.getTitle();
-            LocalDateTime createdAt = questionModel.getCreatedAt();
-            int answerCount = answerDAO.getNumberOfAnswersForQuestion(id);
-            String username = userDAO
+        try {
+            Set<QuestionModel> questionModels = questionsDAO.readAll();
+            Set<QuestionResponseDTO> questionResponseDTOs = new HashSet<>();
 
-            questionResponseDTOs.add(new QuestionResponseDTO());
+            for (QuestionModel questionModel : questionModels) {
+                long id = questionModel.getId();
+                String title = questionModel.getTitle();
+                LocalDateTime createdAt = questionModel.getCreatedAt();
+                int answerCount = answerDAO.getNumberOfAnswersForQuestion(id);
+                String username = userDAO.getUsernameById(questionModel.getUserId());
+
+                questionResponseDTOs.add(new QuestionResponseDTO(
+                        id, title, createdAt, answerCount, username));
+            }
+            return questionResponseDTOs;
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
         }
 
-        return null;
     }
 
     public QuestionDTO getQuestionById(int id) {
