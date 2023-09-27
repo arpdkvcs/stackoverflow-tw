@@ -1,15 +1,19 @@
 package com.codecool.stackoverflowtw.service;
 
+import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
+import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class QuestionService {
-/*
+
 
     private QuestionsDAO questionsDAO;
     @Autowired
@@ -17,9 +21,15 @@ public class QuestionService {
         this.questionsDAO = questionsDAO;
     }
 
-    public List<QuestionDTO> getAllQuestions() {
-        // TODO
-        return List.of(new QuestionDTO(1, "example title", "example desc", LocalDateTime.now()));
+    public Set<QuestionResponseDTO> getAllQuestions() throws SQLException {
+        Set<QuestionModel> questionModels = questionsDAO.readAll();
+        Set<QuestionResponseDTO> questionResponseDTOs = new HashSet<>();
+
+        for (QuestionModel questionModel : questionModels) {
+
+        }
+
+        return List.of(new QuestionResponseDTO(1, "example title", "example desc", LocalDateTime.now()));
     }
 
     public QuestionDTO getQuestionById(int id) {
@@ -37,5 +47,5 @@ public class QuestionService {
         // TODO
         int createdId = 0;
         return createdId;
-    }*/
+    }
 }

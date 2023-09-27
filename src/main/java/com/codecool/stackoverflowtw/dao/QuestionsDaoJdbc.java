@@ -2,8 +2,10 @@ package com.codecool.stackoverflowtw.dao;
 
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -11,7 +13,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Repository
 public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
+    @Autowired
     public QuestionsDaoJdbc(DataSource dataSource) {
         super(dataSource);
     }
@@ -81,7 +85,8 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @NotNull
-    private QuestionModel getQuestionModel(ResultSet rs) throws SQLException {
+    private QuestionModel getQuestionModel(ResultSet rs)
+            throws SQLException, CannotGetJdbcConnectionException {
         long id = rs.getLong("id");
         long userId = rs.getLong("user_id");
         String title = rs.getString("title");
@@ -147,7 +152,7 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     @Override
     public void delete(long id)
             throws SQLException, CannotGetJdbcConnectionException {
-        String sql = "DELETE FROM questions WHERE id = ?";
+        String sql = "DELETE FROM questions WHERE id = ?;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
