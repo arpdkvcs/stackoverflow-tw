@@ -41,7 +41,7 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     @Override
     public Set<QuestionModel> readAll()
             throws SQLException, CannotGetJdbcConnectionException {
-        String sql = "SELECT * FROM questions";
+        String sql = "SELECT * FROM questions;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try (Statement stmt = conn.createStatement();
@@ -62,7 +62,9 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     @Override
     public QuestionModel readById(long questionId)
             throws SQLException, CannotGetJdbcConnectionException {
-        String sql = String.format("SELECT * FROM questions WHERE id = %s", questionId);
+        String sql = "SELECT * FROM questions WHERE id = " +
+                questionId +
+                ";";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -93,8 +95,26 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public Set<QuestionModel> readByTitle(String searchQuery) {
-        return null;
+    public Set<QuestionModel> readByTitle(String searchQuery)
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = "SELECT * FROM questions " +
+                "WHERE title ILIKE '%" +
+                searchQuery +
+                "%';";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery()) {
+            Set<QuestionModel> questionModels = new HashSet<>();
+
+            while (rs.next()) {
+                questionModels.add(getQuestionModel(rs));
+            }
+            return questionModels;
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
     }
 
     @Override

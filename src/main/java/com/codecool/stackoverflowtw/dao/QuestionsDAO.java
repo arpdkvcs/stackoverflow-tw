@@ -13,7 +13,7 @@ public interface QuestionsDAO {
 
     QuestionModel readById(long questionId) throws SQLException;
 
-    Set<QuestionModel> readByTitle(String searchQuery);
+    Set<QuestionModel> readByTitle(String searchQuery) throws SQLException;
 
     void update(QuestionModel questionModel);
 
