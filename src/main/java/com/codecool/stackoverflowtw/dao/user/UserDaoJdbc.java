@@ -199,4 +199,22 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
       releaseConnectionIfNoTransaction(conn);
     }
   }
+
+  @Override
+  public String getUsernameById(long userId) throws SQLException, CannotGetJdbcConnectionException {
+    String sql = "SELECT username FROM users WHERE id = ?;";
+    Connection conn = DataSourceUtils.getConnection(dataSource);
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+      ResultSet rs = ps.executeQuery();
+
+      if (rs.next()) {
+        return rs.getString("username");
+      }
+
+    } finally {
+      releaseConnectionIfNoTransaction(conn);
+    }
+    return null;
+  }
 }
