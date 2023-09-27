@@ -2,6 +2,7 @@ package com.codecool.stackoverflowtw.dao;
 
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,9 +12,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
     public AnswerDaoJdbc(DataSource dataSource) {
         super(dataSource);
+    }
+
+    private static void checkAffectedRowsNotZero(int affectedRows, String Failed_to_create_new_answer) throws SQLException {
+        if (affectedRows == 0) {
+            throw new SQLException(Failed_to_create_new_answer);
+        }
     }
 
     //create new answer
@@ -29,9 +37,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
             preparedStatement.setString(3, answer.getContent());
             int affectedRows = preparedStatement.executeUpdate();
 
-            if (affectedRows == 0) {
-                throw new SQLException("Failed to create new answer");
-            }
+            checkAffectedRowsNotZero(affectedRows, "Failed to create new answer");
 
         } finally {
             releaseConnectionIfNoTransaction(conn);
@@ -50,9 +56,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
             preparedStatement.setLong(2, answer.getId());
             int affectedRows = preparedStatement.executeUpdate();
 
-            if (affectedRows == 0) {
-                throw new SQLException("Failed to update answer");
-            }
+            checkAffectedRowsNotZero(affectedRows, "Failed to update answer");
         } finally {
             releaseConnectionIfNoTransaction(conn);
         }
@@ -69,9 +73,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
             preparedStatement.setLong(1, id);
             int affectedRows = preparedStatement.executeUpdate();
 
-            if (affectedRows == 0) {
-                throw new SQLException("Failed to delete answer");
-            }
+            checkAffectedRowsNotZero(affectedRows, "Failed to delete answer");
         } finally {
             releaseConnectionIfNoTransaction(conn);
         }
