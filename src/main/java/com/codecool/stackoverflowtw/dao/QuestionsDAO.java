@@ -9,7 +9,7 @@ public interface QuestionsDAO {
 
     void create(QuestionModel questionModel) throws SQLException;
 
-    Set<QuestionModel> readAll();
+    Set<QuestionModel> readAll() throws SQLException;
 
     QuestionModel readById(long questionId);
 

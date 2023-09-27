@@ -5,9 +5,9 @@ import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
@@ -38,8 +38,33 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public Set<QuestionModel> readAll() {
-        return null;
+    public Set<QuestionModel> readAll()
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = "SELECT * FROM questions";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            Set<QuestionModel> questionModels = new HashSet<>();
+
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                long userId = rs.getLong("user_id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                long acceptedAnswerId = rs.getLong("accepted_answer_id");
+
+                questionModels.add(new QuestionModel(
+                        id, userId, title, content, createdAt, acceptedAnswerId
+                ));
+            }
+            return questionModels;
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
     }
 
     @Override
