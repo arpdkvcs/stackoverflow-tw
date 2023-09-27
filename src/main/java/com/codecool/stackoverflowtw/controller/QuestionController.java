@@ -1,28 +1,49 @@
 package com.codecool.stackoverflowtw.controller;
 
+import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.service.QuestionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Set;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
 @RestController
-@RequestMapping("questions")
+@RequestMapping("api/questions")
 public class QuestionController {
     private final QuestionService questionService;
+
+    private final Logger logger;
 
     @Autowired
     public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
-    }
-/*
-    @GetMapping("/all")
-    public List<QuestionDTO> getAllQuestions() {
-        return questionService.getAllQuestions();
+        logger = LoggerFactory.getLogger(this.getClass());
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllQuestions() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+                    "data", questionService.getAllQuestions()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
+                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to retrieve questions."));
+        }
+    }
+/*
     @GetMapping("/{id}")
     public QuestionDTO getQuestionById(@PathVariable int id) {
         return null;
