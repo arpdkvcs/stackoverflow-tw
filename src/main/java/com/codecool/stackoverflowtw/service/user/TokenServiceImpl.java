@@ -37,17 +37,6 @@ public class TokenServiceImpl implements TokenService {
     this.userSessionDAO = userSessionDAO;
   }
 
-  private Map<String, Object> createUserInfoMap(TokenUserInfoDTO userInfo) {
-    Map<String, Object> userInfoMap = new HashMap<>();
-    userInfoMap.put("userid", userInfo.userid());
-    userInfoMap.put("username", userInfo.username());
-
-    userInfoMap.put("roles",
-      userInfo.roles().stream().map(role -> role.toString()).collect(Collectors.toSet()));
-
-    return userInfoMap;
-  }
-
   private TokenUserInfoDTO parseUserInfoMap(Map<String, Object> userInfoMap) {
     Long userid = ((Number) userInfoMap.get("userid")).longValue();
     String username = userInfoMap.get("username").toString();
@@ -64,7 +53,11 @@ public class TokenServiceImpl implements TokenService {
   @Override
   public String sign(TokenUserInfoDTO userInfo) throws RuntimeException {
     try {
-      JWTCreator.Builder builder = JWT.create().withClaim("UserInfo", createUserInfoMap(userInfo))
+      JWTCreator.Builder builder = JWT.create()
+        .withClaim("userid", userInfo.userid())
+        .withClaim("username", userInfo.username())
+        .withArrayClaim("roles",
+          userInfo.roles().stream().map(role -> role.toString()).toArray(String[]::new))
         .withExpiresAt(new Date(System.currentTimeMillis() + sessionTokenExpiration));
 
       return builder.sign(sessionTokenAlgorithm);
@@ -92,12 +85,19 @@ public class TokenServiceImpl implements TokenService {
           + ", clearing all sessions");
       }
 
-      Map<String, Object> userInfoString = jwt.getClaim("UserInfo").asMap();
-      return parseUserInfoMap(userInfoString);
+      Long userIdClaim = jwt.getClaim("userid").asLong();
+      String usernameClaim = jwt.getClaim("username").asString();
+      String[] rolesArray = jwt.getClaim("roles").asArray(String.class);
+      Set<Role> roles = Arrays.stream(rolesArray)
+        .map(roleStr -> Role.valueOf(roleStr))
+        .collect(Collectors.toSet());
+
+      return new TokenUserInfoDTO(userIdClaim, usernameClaim, roles);
     } catch (Exception e) {
       throw new RuntimeException("Invalid session token", e);
     }
   }
+
 
   @Override
   public Set<String> readAllOfUser(long userid) throws SQLException {
@@ -111,7 +111,7 @@ public class TokenServiceImpl implements TokenService {
   @Override
   public void addToUser(long userid, String rawRefreshToken) throws SQLException {
     try {
-      userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(3)));
+      userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
     } catch (CannotGetJdbcConnectionException e) {
       throw new SQLException(e);
     }

@@ -1,16 +1,14 @@
 package com.codecool.stackoverflowtw.controller;
 
-import com.codecool.stackoverflowtw.controller.dto.user.LoginResponseDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.LoginUserDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.NewUserDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.*;
 import com.codecool.stackoverflowtw.service.user.AuthenticationService;
+import com.codecool.stackoverflowtw.service.user.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 
@@ -19,11 +17,13 @@ import java.util.Map;
 public class AuthenticationController {
 
   private final AuthenticationService authenticationService;
+  private final TokenService tokenService;
   private final Logger logger;
 
   @Autowired
-  public AuthenticationController(AuthenticationService authenticationService) {
+  public AuthenticationController(AuthenticationService authenticationService, TokenService tokenService) {
     this.authenticationService = authenticationService;
+    this.tokenService = tokenService;
     this.logger = LoggerFactory.getLogger(this.getClass());
   }
 
@@ -55,19 +55,31 @@ public class AuthenticationController {
     }
   }
 
-  @PostMapping("/logout")
-  public ResponseEntity<?> logout(@RequestParam long userid, @RequestParam String sessionToken) {
+  @PostMapping("/authenticateTest")
+  public ResponseEntity<?> authenticateTest(@RequestBody UserAuthenticationDTO userAuthData) {
     try {
-      authenticationService.logout(userid, sessionToken);
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+      logger.info(tokenService.verify(userAuthData.userid(), userAuthData.sessionToken()).toString());
+      return ResponseEntity.ok(Map.of("status", HttpStatus.OK.value(),
         "message", "ok"));
+    } catch (Exception e) {
+      return handleBadRequest("error", e);
+    }
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(@RequestBody LogoutUserDTO logoutUserDTO) {
+    try {
+      authenticationService.logout(logoutUserDTO);
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "message", "User account with ID " + logoutUserDTO.userid()
+          + " logged out successfully"));
     } catch (Exception e) {
       return handleBadRequest("Logout failed for user account", e);
     }
   }
 
-  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  private ResponseEntity<?> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+  @ExceptionHandler(Exception.class)
+  private ResponseEntity<?> handleException(Exception e) {
     return handleBadRequest("Invalid data format", e);
   }
 }

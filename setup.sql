@@ -21,6 +21,9 @@ CREATE TABLE roles
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
+INSERT INTO roles (name) VALUES ('USER');
+INSERT INTO roles (name) VALUES ('ADMIN');
+
 CREATE TABLE user_roles
 (
     user_id BIGINT NOT NULL,

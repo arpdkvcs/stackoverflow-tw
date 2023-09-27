@@ -1,6 +1,7 @@
 package com.codecool.stackoverflowtw.service.user;
 
 import com.codecool.stackoverflowtw.controller.dto.user.LoginResponseDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.LogoutUserDTO;
 import com.codecool.stackoverflowtw.controller.dto.user.NewUserDTO;
 import com.codecool.stackoverflowtw.controller.dto.user.LoginUserDTO;
 
@@ -9,5 +10,5 @@ public interface AuthenticationService {
 
   LoginResponseDTO login(LoginUserDTO user) throws Exception;
 
-  void logout(long userid, String sessionToken) throws Exception;
+  void logout(LogoutUserDTO logoutUserDTO) throws Exception;
 }

@@ -1,9 +1,6 @@
 package com.codecool.stackoverflowtw.service.user;
 
-import com.codecool.stackoverflowtw.controller.dto.user.LoginResponseDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.LoginUserDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.NewUserDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.*;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
 import com.codecool.stackoverflowtw.dao.user.model.Role;
 import com.codecool.stackoverflowtw.dao.user.model.User;
@@ -30,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void register(NewUserDTO user) throws Exception {
-    userDAO.create(user.username(), BCrypt.hashpw(user.rawPassword(), BCrypt.gensalt(10)));
+    userDAO.create(user.username(), BCrypt.hashpw(user.password(), BCrypt.gensalt(10)));
     Optional<User> foundUser = userDAO.readByUsername(user.username());
     if (foundUser.isPresent()) {
       accessControlService.assignToUser(foundUser.get().getId(), Role.USER);
@@ -48,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     User foundUser = userToFind.get();
-    if (!BCrypt.checkpw(user.rawPassword(), foundUser.getHashedPassword())) {
+    if (!BCrypt.checkpw(user.password(), foundUser.getHashedPassword())) {
       throw new RuntimeException("Username or password doesn't match");
     }
 
@@ -64,17 +61,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     tokenService.addToUser(foundUser.getId(), sessionToken);
 
 
-    return new LoginResponseDTO(foundUser.getId(), foundUser.getUsername(), sessionToken);
+    return new LoginResponseDTO(foundUser.getId(), foundUser.getUsername(), foundUser.getRoles(),
+      sessionToken);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void logout(long userid, String sessionToken) throws Exception {
+  public void logout(LogoutUserDTO logoutUserDTO) throws Exception {
     try {
-      tokenService.removeFromUser(userid, sessionToken);
+      tokenService.removeFromUser(logoutUserDTO.userid(), logoutUserDTO.sessionToken());
     } catch (Exception e) {
-      tokenService.removeAllFromUser(userid);
-      throw new RuntimeException("Error during logout at user with ID " + userid +
+      tokenService.removeAllFromUser(logoutUserDTO.userid());
+      throw new RuntimeException("Error during logout at user with ID " + logoutUserDTO.userid() +
         ", clearing all sessions");
     }
   }
