@@ -3,6 +3,7 @@ package com.codecool.stackoverflowtw.service;
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
 import com.codecool.stackoverflowtw.dao.AnswerDAO;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
@@ -81,6 +82,7 @@ public class QuestionService {
     }
 
     private Set<QuestionResponseDTO> convertQuestionModelsToQuestionResponseDTOs(Set<QuestionResponseDTO> foundQuestions, Set<QuestionModel> foundQuestionModels) throws SQLException {
+
         for (QuestionModel questionModel : foundQuestionModels) {
             long id = questionModel.getId();
             String title = questionModel.getTitle();
@@ -95,18 +97,38 @@ public class QuestionService {
         return foundQuestions;
     }
 
-    public boolean deleteQuestionById(int id) throws SQLException {
+    public boolean deleteQuestionById(long id) throws SQLException {
 
         try {
-
+            questionsDAO.delete(id);
+            return true;
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }
-        return false;
     }
 
-    public int addNewQuestion(NewQuestionDTO question) {
+    public boolean updateQuestion(UpdateQuestionDTO updateQuestionDTO) throws SQLException {
+
+        try {
+            long id = updateQuestionDTO.id();
+            long userId = updateQuestionDTO.userId();
+            String title = updateQuestionDTO.title();
+            String content = updateQuestionDTO.content();
+            LocalDateTime createdAt = LocalDateTime.now();
+            long acceptedAnswerId = updateQuestionDTO.acceptedAnswerId();
+
+            questionsDAO.update(new QuestionModel(
+                    id, userId, title, content, createdAt, acceptedAnswerId
+            ));
+            return true;
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    public int addNewQuestion(NewQuestionDTO newQuestionDTO) {
         // TODO
         int createdId = 0;
         return createdId;
