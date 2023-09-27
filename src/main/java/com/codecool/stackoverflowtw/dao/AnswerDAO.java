@@ -18,8 +18,10 @@ public interface AnswerDAO {
 
 
     //fetch answers for a specific question
-    Set<AnswerModel> getAnswerByQuestionId(long questionId) throws SQLException;
+    Set<AnswerModel> getAnswersByQuestionId(long questionId) throws SQLException;
 
     int getNumberOfAnswersForQuestion(long questionId) throws SQLException;
+
+    Set<Long> getAnswersIdsForQuestion(long questionId) throws SQLException;
 
 }

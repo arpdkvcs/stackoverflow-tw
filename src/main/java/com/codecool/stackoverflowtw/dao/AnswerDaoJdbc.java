@@ -87,7 +87,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
     //fetch answers for a specific question
     @Override
-    public Set<AnswerModel> getAnswerByQuestionId(long questionId)
+    public Set<AnswerModel> getAnswersByQuestionId(long questionId)
             throws SQLException, CannotGetJdbcConnectionException {
         Set<AnswerModel> answers = new HashSet<>();
         String sql = "SELECT * FROM answers WHERE question_id=?";
@@ -133,5 +133,23 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
         return 0;
     }
 
+    @Override
+    public Set<Long> getAnswersIdsForQuestion(long questionId)throws SQLException, CannotGetJdbcConnectionException {
+        Set<Long> answers = new HashSet<>();
+        String sql = "SELECT id FROM answers WHERE question_id=?";
 
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, questionId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                answers.add(resultSet.getLong("id"));
+            }
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
+        return answers;
+    }
 }

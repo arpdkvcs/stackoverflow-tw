@@ -1,6 +1,7 @@
 package com.codecool.stackoverflowtw.service;
 
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
 import com.codecool.stackoverflowtw.dao.AnswerDAO;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
@@ -56,10 +57,20 @@ public class QuestionService {
 
     }
 
-    public QuestionDTO getQuestionById(int id) {
-        // TODO
-        questionsDAO.sayHi();
-        return new QuestionDTO(id, "example title", "example desc", LocalDateTime.now());
+    public QuestionResponseDetailsDTO getQuestionById(int questionId) throws SQLException {
+        try {
+            QuestionModel questionModel = questionsDAO.readById(questionId);
+            long id = questionModel.getId();
+            String title = questionModel.getTitle();
+            String content = questionModel.getContent();
+            LocalDateTime createdAt = questionModel.getCreatedAt();
+            Set<Long> answersIds = answerDAO.
+
+            return new QuestionResponseDetailsDTO();
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
+        return null;
     }
 
     public boolean deleteQuestionById(int id) {
