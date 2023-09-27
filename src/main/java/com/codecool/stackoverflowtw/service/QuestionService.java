@@ -48,7 +48,7 @@ public class QuestionService {
 
     }
 
-    public QuestionResponseDetailsDTO getQuestionById(int questionId) throws SQLException {
+    public QuestionResponseDetailsDTO getQuestionById(long questionId) throws SQLException {
 
         try {
             QuestionModel questionModel = questionsDAO.readById(questionId);
@@ -108,27 +108,45 @@ public class QuestionService {
         }
     }
 
-    public boolean updateQuestion(UpdateQuestionDTO updateQuestionDTO) throws SQLException {
+    public QuestionResponseDetailsDTO updateQuestion(UpdateQuestionDTO updateQuestionDTO) throws SQLException {
 
         try {
             long id = updateQuestionDTO.id();
             long userId = updateQuestionDTO.userId();
             String title = updateQuestionDTO.title();
             String content = updateQuestionDTO.content();
-            LocalDateTime createdAt = LocalDateTime.now();
             long acceptedAnswerId = updateQuestionDTO.acceptedAnswerId();
 
             questionsDAO.update(new QuestionModel(
-                    id, userId, title, content, createdAt, acceptedAnswerId
+                    id, userId, title, content, null, acceptedAnswerId
             ));
-            return true;
+
+            try {
+                return getQuestionById(id);
+
+            } catch (CannotGetJdbcConnectionException e) {
+                throw new SQLException(e);
+            }
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }
     }
 
-    public int addNewQuestion(NewQuestionDTO newQuestionDTO) {
+    public int addNewQuestion(NewQuestionDTO question) throws SQLException {
+
+        try {
+            long userId = question.userId();
+            String title = question.title();
+            String content = question.content();
+
+            questionsDAO.create(new QuestionModel(
+                    -1, userId, title, content, null, -1));
+
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
         // TODO
         int createdId = 0;
         return createdId;
