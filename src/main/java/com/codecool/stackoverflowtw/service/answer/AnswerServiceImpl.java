@@ -1,5 +1,6 @@
 package com.codecool.stackoverflowtw.service.answer;
 
+import com.codecool.stackoverflowtw.controller.dto.answer.AnswerResponseDetailsDTO;
 import com.codecool.stackoverflowtw.controller.dto.answer.NewAnswerDTO;
 import com.codecool.stackoverflowtw.controller.dto.answer.UpdateAnswerDTO;
 import com.codecool.stackoverflowtw.dao.AnswerDAO;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {
@@ -51,6 +54,24 @@ public class AnswerServiceImpl implements AnswerService {
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }
+    }
+
+    @Override
+    public List<AnswerResponseDetailsDTO> getAnswerByQuestionId(long questionId) throws SQLException {
+        List<AnswerModel> answerModels = answerDAO.getAnswerByQuestionId((questionId));
+        List<AnswerResponseDetailsDTO> responseList = new ArrayList<>();
+
+        for (AnswerModel answer : answerModels) {
+            String username = String.valueOf(userDAO.readById(answer.getUserId()));
+            AnswerResponseDetailsDTO responseDTO = new AnswerResponseDetailsDTO(
+                    answer.getId(),
+                    answer.getContent(),
+                    answer.getCreatedAt(),
+                    username
+            );
+            responseList.add(responseDTO);
+        }
+        return responseList;
     }
 
 
