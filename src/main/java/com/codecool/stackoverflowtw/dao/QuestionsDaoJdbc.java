@@ -118,12 +118,48 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public void update(QuestionModel questionModel) {
+    public void update(QuestionModel questionModel)
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = "UPDATE questions SET " +
+                        "title = ?, " +
+                        "content = ?, " +
+                        "accepted_answer_id = ? " +
+                        "WHERE id = ?;";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
 
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, questionModel.getTitle());
+            pstmt.setString(2, questionModel.getContent());
+            pstmt.setLong(3, questionModel.getAcceptedAnswerId());
+            pstmt.setLong(4, questionModel.getId());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Couldn't update question in questions table.");
+            }
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(long id)
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = "DELETE FROM questions WHERE id = ?";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
 
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to delete question");
+            }
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
     }
 }
