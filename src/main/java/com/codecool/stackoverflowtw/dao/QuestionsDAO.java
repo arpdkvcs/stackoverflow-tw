@@ -11,7 +11,7 @@ public interface QuestionsDAO {
 
     Set<QuestionModel> readAll() throws SQLException;
 
-    QuestionModel readById(long questionId);
+    QuestionModel readById(long questionId) throws SQLException;
 
     Set<QuestionModel> readByTitle(String searchQuery);
 

@@ -1,6 +1,7 @@
 package com.codecool.stackoverflowtw.dao;
 
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
@@ -43,22 +44,13 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
         String sql = "SELECT * FROM questions";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        try (Statement stmt = conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql);
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             Set<QuestionModel> questionModels = new HashSet<>();
 
             while (rs.next()) {
-                long id = rs.getLong("id");
-                long userId = rs.getLong("user_id");
-                String title = rs.getString("title");
-                String content = rs.getString("content");
-                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
-                long acceptedAnswerId = rs.getLong("accepted_answer_id");
-
-                questionModels.add(new QuestionModel(
-                        id, userId, title, content, createdAt, acceptedAnswerId
-                ));
+                questionModels.add(getQuestionModel(rs));
             }
             return questionModels;
 
@@ -68,8 +60,36 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public QuestionModel readById(long questionId) {
+    public QuestionModel readById(long questionId)
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = String.format("SELECT * FROM questions WHERE id = %s", questionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+            
+            if (rs.next()) {
+                return getQuestionModel(rs);
+            }
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
         return null;
+    }
+
+    @NotNull
+    private QuestionModel getQuestionModel(ResultSet rs) throws SQLException {
+        long id = rs.getLong("id");
+        long userId = rs.getLong("user_id");
+        String title = rs.getString("title");
+        String content = rs.getString("content");
+        LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+        long acceptedAnswerId = rs.getLong("accepted_answer_id");
+
+        return new QuestionModel(
+                id, userId, title, content, createdAt, acceptedAnswerId
+        );
     }
 
     @Override
