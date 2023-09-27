@@ -58,19 +58,21 @@ public class QuestionService {
     }
 
     public QuestionResponseDetailsDTO getQuestionById(int questionId) throws SQLException {
+
         try {
             QuestionModel questionModel = questionsDAO.readById(questionId);
             long id = questionModel.getId();
             String title = questionModel.getTitle();
             String content = questionModel.getContent();
             LocalDateTime createdAt = questionModel.getCreatedAt();
-            Set<Long> answersIds = answerDAO.
+            Set<Long> answersIds = answerDAO.getAnswersIdsForQuestion(questionId);
+            String username = userDAO.getUsernameById(questionModel.getUserId());
 
-            return new QuestionResponseDetailsDTO();
+            return new QuestionResponseDetailsDTO(id, title, content, createdAt, answersIds, username);
+
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }
-        return null;
     }
 
     public boolean deleteQuestionById(int id) {
