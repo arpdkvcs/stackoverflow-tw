@@ -17,11 +17,10 @@ public abstract class BaseDaoJdbc {
     this.dataSource = dataSource;
   }
 
-  protected void releaseConnectionIfNoTransaction(Connection currentConnection,
-                                                  DataSource currentSource) {
+  protected void releaseConnectionIfNoTransaction(Connection currentConnection) {
     if (currentConnection != null
       && !TransactionSynchronizationManager.isActualTransactionActive()) {
-      DataSourceUtils.releaseConnection(currentConnection, currentSource);
+      DataSourceUtils.releaseConnection(currentConnection, dataSource);
     }
   }
 }
