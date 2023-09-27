@@ -8,7 +8,7 @@ import java.util.Set;
 public interface TokenService {
   String sign(TokenUserInfoDTO userInfo) throws RuntimeException;
 
-  TokenUserInfoDTO verify(long userid, String rawSessionToken) throws RuntimeException;
+  TokenUserInfoDTO verify(String rawSessionToken) throws RuntimeException;
 
   Set<String> readAllOfUser(long userid) throws SQLException;
 

@@ -58,7 +58,7 @@ public class AuthenticationController {
   @PostMapping("/authenticateTest")
   public ResponseEntity<?> authenticateTest(@RequestBody UserAuthenticationDTO userAuthData) {
     try {
-      logger.info(tokenService.verify(userAuthData.userid(), userAuthData.sessionToken()).toString());
+      logger.info(tokenService.verify(userAuthData.sessionToken()).toString());
       return ResponseEntity.ok(Map.of("status", HttpStatus.OK.value(),
         "message", "ok"));
     } catch (Exception e) {

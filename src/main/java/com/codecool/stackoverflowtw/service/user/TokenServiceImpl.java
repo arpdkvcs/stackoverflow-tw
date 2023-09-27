@@ -22,131 +22,130 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenServiceImpl implements TokenService {
-    private final Algorithm sessionTokenAlgorithm;
-    private final JWTVerifier verifier;
-    private final long sessionTokenExpiration;
-    private final UserSessionDAO userSessionDAO;
+  private final Algorithm sessionTokenAlgorithm;
+  private final JWTVerifier verifier;
+  private final long sessionTokenExpiration;
+  private final UserSessionDAO userSessionDAO;
 
-    @Autowired
-    public TokenServiceImpl(@Value("${jwt.session-token-secret}") String sessionTokenSecret,
-                            @Value("${jwt.session-token-expiration}") long sessionTokenExpiration,
-                            UserSessionDAO userSessionDAO) {
-        this.sessionTokenExpiration = sessionTokenExpiration;
-        this.sessionTokenAlgorithm = Algorithm.HMAC256(sessionTokenSecret);
-        this.verifier = JWT.require(this.sessionTokenAlgorithm).build();
-        this.userSessionDAO = userSessionDAO;
+  @Autowired
+  public TokenServiceImpl(@Value("${jwt.session-token-secret}") String sessionTokenSecret,
+                          @Value("${jwt.session-token-expiration}") long sessionTokenExpiration,
+                          UserSessionDAO userSessionDAO) {
+    this.sessionTokenExpiration = sessionTokenExpiration;
+    this.sessionTokenAlgorithm = Algorithm.HMAC256(sessionTokenSecret);
+    this.verifier = JWT.require(this.sessionTokenAlgorithm).build();
+    this.userSessionDAO = userSessionDAO;
+  }
+
+  private TokenUserInfoDTO parseUserInfoMap(Map<String, Object> userInfoMap) {
+    Long userid = ((Number) userInfoMap.get("userid")).longValue();
+    String username = userInfoMap.get("username").toString();
+
+    Set<String> rolesStrings = new HashSet<>((Collection<String>) userInfoMap.get("roles"));
+    Set<Role> roles = rolesStrings.stream()
+      .map(Role::valueOf)
+      .collect(Collectors.toSet());
+
+    return new TokenUserInfoDTO(userid, username, roles);
+  }
+
+
+  @Override
+  public String sign(TokenUserInfoDTO userInfo) throws RuntimeException {
+    try {
+      JWTCreator.Builder builder = JWT.create()
+        .withClaim("userid", userInfo.userid())
+        .withClaim("username", userInfo.username())
+        .withArrayClaim("roles",
+          userInfo.roles().stream()
+            .map(Enum::toString)
+            .toArray(String[]::new))
+        .withExpiresAt(new Date(System.currentTimeMillis() + sessionTokenExpiration));
+
+      return builder.sign(sessionTokenAlgorithm);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to sign session token", e);
     }
+  }
 
-    private TokenUserInfoDTO parseUserInfoMap(Map<String, Object> userInfoMap) {
-        Long userid = ((Number) userInfoMap.get("userid")).longValue();
-        String username = userInfoMap.get("username").toString();
+  @Override
+  @Transactional(rollbackFor = JWTVerificationException.class)
+  public TokenUserInfoDTO verify(String rawSessionToken) throws RuntimeException {
+    try {
+      DecodedJWT jwt = verifier.verify(rawSessionToken);
+      Long userId = jwt.getClaim("userid").asLong();
+      String username = jwt.getClaim("username").asString();
+      String[] rolesArray = jwt.getClaim("roles").asArray(String.class);
+      Set<Role> roles = Arrays.stream(rolesArray)
+        .map(roleStr -> Role.valueOf(roleStr))
+        .collect(Collectors.toSet());
 
-        Set<String> rolesStrings = new HashSet<>((Collection<String>) userInfoMap.get("roles"));
-        Set<Role> roles = rolesStrings.stream()
-                .map(Role::valueOf)
-                .collect(Collectors.toSet());
-
-        return new TokenUserInfoDTO(userid, username, roles);
-    }
-
-
-    @Override
-    public String sign(TokenUserInfoDTO userInfo) throws RuntimeException {
-        try {
-            JWTCreator.Builder builder = JWT.create()
-                    .withClaim("userid", userInfo.userid())
-                    .withClaim("username", userInfo.username())
-                    .withArrayClaim("roles",
-                            userInfo.roles().stream()
-                                    .map(Enum::toString)
-                                    .toArray(String[]::new))
-                    .withExpiresAt(new Date(System.currentTimeMillis() + sessionTokenExpiration));
-
-            return builder.sign(sessionTokenAlgorithm);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to sign session token", e);
+      Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userId);
+      String matchingToken = null;
+      for (String hashedToken : hashedSessionTokens) {
+        if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
+          matchingToken = hashedToken;
         }
+      }
+      if (matchingToken == null) {
+        userSessionDAO.removeAllFromUser(userId);
+        throw new RuntimeException("Invalid session token found at user with ID " + userId
+          + ", clearing all sessions");
+      }
+
+      return new TokenUserInfoDTO(userId, username, roles);
+    } catch (Exception e) {
+      throw new RuntimeException("Invalid session token", e);
     }
+  }
 
-    @Override
-    @Transactional(rollbackFor = JWTVerificationException.class)
-    public TokenUserInfoDTO verify(long userid, String rawSessionToken) throws RuntimeException {
-        try {
-            DecodedJWT jwt = verifier.verify(rawSessionToken);
 
-            Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userid);
-            String matchingToken = null;
-            for (String hashedToken : hashedSessionTokens) {
-                if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
-                    matchingToken = hashedToken;
-                }
-            }
-            if (matchingToken == null) {
-                userSessionDAO.removeAllFromUser(userid);
-                throw new RuntimeException("Invalid session token found at user with ID " + userid
-                        + ", clearing all sessions");
-            }
+  @Override
+  public Set<String> readAllOfUser(long userid) throws SQLException {
+    try {
+      return userSessionDAO.readAllOfUser(userid);
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
+    }
+  }
 
-            Long userIdClaim = jwt.getClaim("userid").asLong();
-            String usernameClaim = jwt.getClaim("username").asString();
-            String[] rolesArray = jwt.getClaim("roles").asArray(String.class);
-            Set<Role> roles = Arrays.stream(rolesArray)
-                    .map(roleStr -> Role.valueOf(roleStr))
-                    .collect(Collectors.toSet());
+  @Override
+  public void addToUser(long userid, String rawRefreshToken) throws SQLException {
+    try {
+      userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
+    }
+  }
 
-            return new TokenUserInfoDTO(userIdClaim, usernameClaim, roles);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid session token", e);
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void removeFromUser(long userid, String rawSessionToken)
+    throws SQLException {
+    try {
+      Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userid);
+      String hashedTokenToRemove = null;
+      for (String hashedToken : hashedSessionTokens) {
+        if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
+          hashedTokenToRemove = hashedToken;
         }
+      }
+      if (hashedTokenToRemove != null) {
+        userSessionDAO.removeFromUser(userid, hashedTokenToRemove);
+      } else {
+        throw new RuntimeException("Token to remove not found at user with ID " + userid);
+      }
+    } catch (Exception e) {
+      throw new SQLException(e);
     }
+  }
 
-
-    @Override
-    public Set<String> readAllOfUser(long userid) throws SQLException {
-        try {
-            return userSessionDAO.readAllOfUser(userid);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new SQLException(e);
-        }
+  @Override
+  public void removeAllFromUser(long userid) throws SQLException {
+    try {
+      userSessionDAO.removeAllFromUser(userid);
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
     }
-
-    @Override
-    public void addToUser(long userid, String rawRefreshToken) throws SQLException {
-        try {
-            userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new SQLException(e);
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void removeFromUser(long userid, String rawSessionToken)
-            throws SQLException {
-        try {
-            Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userid);
-            String hashedTokenToRemove = null;
-            for (String hashedToken : hashedSessionTokens) {
-                if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
-                    hashedTokenToRemove = hashedToken;
-                }
-            }
-            if (hashedTokenToRemove != null) {
-                userSessionDAO.removeFromUser(userid, hashedTokenToRemove);
-            } else {
-                throw new RuntimeException("Token to remove not found at user with ID " + userid);
-            }
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
-    }
-
-    @Override
-    public void removeAllFromUser(long userid) throws SQLException {
-        try {
-            userSessionDAO.removeAllFromUser(userid);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new SQLException(e);
-        }
-    }
+  }
 }
