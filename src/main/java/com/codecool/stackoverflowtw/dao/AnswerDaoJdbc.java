@@ -1,16 +1,18 @@
 package com.codecool.stackoverflowtw.dao;
 
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.exceptions.CacheConfigurationException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Repository
 public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
@@ -26,7 +28,8 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
     //create new answer
     @Override
-    public void insertAnswer(AnswerModel answer) throws SQLException {
+    public void insertAnswer(AnswerModel answer)
+            throws SQLException, CannotGetJdbcConnectionException {
         String sql = "INSERT INTO answers(user_id, question_id, content) VALUES(?,?,?)";
 
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -46,7 +49,8 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
     //update an answer
     @Override
-    public void updateAnswer(AnswerModel answer) throws SQLException {
+    public void updateAnswer(AnswerModel answer)
+            throws SQLException, CannotGetJdbcConnectionException {
         String sql = "UPDATE answers SET content=? WHERE id=?";
 
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -64,7 +68,8 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
     //delete an answer
     @Override
-    public void deleteAnswer(long id) throws SQLException {
+    public void deleteAnswer(long id)
+            throws SQLException, CannotGetJdbcConnectionException {
         String sql = "DELETE FROM answers WHERE id=?";
 
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -82,8 +87,9 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
     //fetch answers for a specific question
     @Override
-    public List<AnswerModel> getAnswerByQuestionId(long questionId) throws SQLException {
-        List<AnswerModel> answers = new ArrayList<>();
+    public Set<AnswerModel> getAnswerByQuestionId(long questionId)
+            throws SQLException, CannotGetJdbcConnectionException {
+        Set<AnswerModel> answers = new HashSet<>();
         String sql = "SELECT * FROM answers WHERE question_id=?";
 
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -104,6 +110,27 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
             releaseConnectionIfNoTransaction(conn);
         }
         return answers;
+    }
+
+    @Override
+    public int getNumberOfAnswersForQuestion(long questionId)
+            throws SQLException, CannotGetJdbcConnectionException {
+        String sql = "SELECT COUNT(id) FROM answers WHERE question_id = ?;";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setLong(1, questionId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("COUNT");
+            }
+
+        } finally {
+            releaseConnectionIfNoTransaction(conn);
+        }
+        return 0;
     }
 
 

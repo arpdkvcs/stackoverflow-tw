@@ -3,8 +3,7 @@ package com.codecool.stackoverflowtw.dao;
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 public interface AnswerDAO {
 
@@ -19,6 +18,8 @@ public interface AnswerDAO {
 
 
     //fetch answers for a specific question
-    List<AnswerModel> getAnswerByQuestionId(long questionId) throws SQLException;
+    Set<AnswerModel> getAnswerByQuestionId(long questionId) throws SQLException;
+
+    int getNumberOfAnswersForQuestion(long questionId) throws SQLException;
 
 }
