@@ -1,5 +1,6 @@
 package com.codecool.stackoverflowtw.controller;
 
+import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.service.QuestionService;
 import org.slf4j.Logger;
@@ -56,12 +57,26 @@ public class QuestionController {
         }
     }
 
-/*
+    @GetMapping("/search/questions/{searchQuery}")
+    public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+                    "data", questionService.getQuestionsByTitle(searchQuery)));
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
+                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to perform search."));
+        }
+    }
+
     @PostMapping("/")
     public int addNewQuestion(@RequestBody NewQuestionDTO question) {
         return 0;
     }
 
+/*
     @DeleteMapping("/{id}")
     public boolean deleteQuestionById(@PathVariable int id) {
         return false;
