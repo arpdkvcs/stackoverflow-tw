@@ -97,7 +97,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
 
       return getUsersSet(rs);
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -119,7 +119,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
       ResultSet rs = ps.executeQuery();
       return getUserObject(rs);
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -140,7 +140,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
       ResultSet rs = ps.executeQuery();
       return getUserObject(rs);
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -159,7 +159,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
         throw new SQLException("Failed to create user" + username);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -179,7 +179,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
         throw new SQLException("Failed to update user" + username);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
 
   }
@@ -196,7 +196,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
         throw new SQLException("Failed to delete user with ID " + id);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 }

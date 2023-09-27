@@ -26,12 +26,8 @@ public class UserServiceImpl implements UserService {
 
 
   private Optional<UserResponseDetailsDTO> getUserResponseDetailsDTO(Optional<User> userModel) {
-    if (userModel.isPresent()) {
-      return Optional.of(new UserResponseDetailsDTO(userModel.get().getId(),
-        userModel.get().getUsername(), userModel.get().getRoles()));
-    } else {
-      return Optional.empty();
-    }
+      return userModel.map(user -> new UserResponseDetailsDTO(user.getId(),
+              user.getUsername(), user.getRoles()));
   }
 
   @Override

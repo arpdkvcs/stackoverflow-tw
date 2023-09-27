@@ -40,7 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Transactional(rollbackFor = Exception.class)
   public LoginResponseDTO login(LoginUserDTO user) throws Exception {
     Optional<User> userToFind = userDAO.readByUsername(user.username());
-    if (!userToFind.isPresent()) {
+    if (userToFind.isEmpty()) {
       throw new RuntimeException("Username or password doesn't match");
     }
 
