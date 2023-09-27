@@ -34,7 +34,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
         tokens.add(rs.getString("token"));
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
     return tokens;
   }
@@ -54,7 +54,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
         throw new SQLException("Failed to add session token to user with ID " + userid);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -73,7 +73,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
         throw new SQLException("Failed to remove session token from user with ID " + userid);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -90,7 +90,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
         throw new SQLException("Failed to remove all session tokens from user with ID " + userid);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 }

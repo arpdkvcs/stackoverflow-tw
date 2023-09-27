@@ -38,7 +38,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
         roles.add(Role.valueOf(rs.getString("name")));
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
     return roles;
   }
@@ -60,7 +60,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
           + userid);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -81,7 +81,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
           + userid);
       }
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 
@@ -101,7 +101,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
       ResultSet rs = ps.executeQuery();
       return rs.next();
     } finally {
-      releaseConnectionIfNoTransaction(conn, dataSource);
+      releaseConnectionIfNoTransaction(conn);
     }
   }
 }
