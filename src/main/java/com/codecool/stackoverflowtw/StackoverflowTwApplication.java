@@ -21,10 +21,13 @@ public class StackoverflowTwApplication {
     SpringApplication.run(StackoverflowTwApplication.class, args);
   }
 
+  /*
   @Bean
   public QuestionsDAO questionsDAO() {
     return new QuestionsDaoJdbc();
   }
+
+   */
 
 
 }

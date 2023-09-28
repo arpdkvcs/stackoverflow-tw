@@ -22,4 +22,6 @@ public interface UserDAO {
     throws SQLException, CannotGetJdbcConnectionException;
 
   void delete(long id) throws SQLException, CannotGetJdbcConnectionException;
+
+  String getUsernameById(long userId) throws SQLException;
 }

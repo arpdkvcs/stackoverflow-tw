@@ -1,85 +1,119 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.user.*;
+import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.AuthenticationService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController {
+public class AuthenticationController extends BaseController {
 
   private final AuthenticationService authenticationService;
-  private final TokenService tokenService;
-  private final Logger logger;
 
-  @Autowired
-  public AuthenticationController(AuthenticationService authenticationService, TokenService tokenService) {
+  @Value("${jwt.session-token-expiration}")
+  private int sessionTokenExpiration;
+
+  public AuthenticationController(TokenService tokenService,
+                                  AccessControlService accessControlService,
+                                  AuthenticationService authenticationService) {
+    super(tokenService, accessControlService);
     this.authenticationService = authenticationService;
-    this.tokenService = tokenService;
-    this.logger = LoggerFactory.getLogger(this.getClass());
-  }
-
-  private ResponseEntity<?> handleBadRequest(String message, Exception e) {
-    logger.error(message, e);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-      HttpStatus.BAD_REQUEST.value(), "error", message));
   }
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody NewUserDTO newUserDTO) {
     try {
       authenticationService.register(newUserDTO);
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "message", "User account created successfully"));
+      return handleOkMessage("User account created successfully");
     } catch (Exception e) {
       return handleBadRequest("Failed to create user account", e);
     }
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO) {
+  public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO,
+                                 HttpServletResponse response) {
     try {
       LoginResponseDTO loginResponse = authenticationService.login(loginUserDTO);
-      return ResponseEntity.ok(Map.of("status", HttpStatus.OK.value(),
-        "data", loginResponse));
+
+      String cookieValue = String.format(
+        "jwt=%s; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=%d",
+        loginResponse.sessionToken(),
+        sessionTokenExpiration
+      );
+      response.addHeader("Set-Cookie", cookieValue);
+
+      Map<String, Object> responseData = new HashMap<>();
+      responseData.put("userid", loginResponse.userid());
+      responseData.put("username", loginResponse.username());
+      responseData.put("roles", loginResponse.roles());
+
+      return handleOkData("User account logged in successfully", responseData);
     } catch (Exception e) {
-      return handleBadRequest("Login failed for user account", e);
+      return handleUnauthorized("Login failed for user account", e);
     }
   }
 
   @PostMapping("/authenticateTest")
-  public ResponseEntity<?> authenticateTest(@RequestBody UserAuthenticationDTO userAuthData) {
+  public ResponseEntity<?> authenticateTest(HttpServletRequest request,
+                                            HttpServletResponse response) {
     try {
-      logger.info(tokenService.verify(userAuthData.userid(), userAuthData.sessionToken()).toString());
-      return ResponseEntity.ok(Map.of("status", HttpStatus.OK.value(),
-        "message", "ok"));
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+      if (userInfo.isPresent()) {
+        long userId = userInfo.get().userid();
+        //create xyzDTO with this ID, call service method etc
+
+        String username = userInfo.get().username();
+        Set<Role> roles = userInfo.get().roles();
+
+        //can verify role from received roles, or if null, from the database
+        boolean hasRequiredRoleInToken = verifyRole(userId, Role.USER, roles);
+        boolean hasRequiredRoleInDb = verifyRole(userId, Role.USER, null);
+
+        return handleOkMessage("user ID: " + userId + ", username:" + username
+          + ", roles:" + roles
+          + ", has required role in token: " + hasRequiredRoleInToken
+          + ", has required role in database: " + hasRequiredRoleInDb);
+      } else {
+        return handleUnauthorized("Unauthorized", null);
+      }
     } catch (Exception e) {
+      removeSessionCookie(response);
       return handleBadRequest("error", e);
     }
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout(@RequestBody LogoutUserDTO logoutUserDTO) {
+  public ResponseEntity<?> logout(HttpServletRequest request,
+                                  HttpServletResponse response) {
     try {
-      authenticationService.logout(logoutUserDTO);
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "message", "User account with ID " + logoutUserDTO.userid()
-          + " logged out successfully"));
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+      if (userInfo.isPresent()) {
+        authenticationService.logout(new LogoutUserDTO(userInfo.get().userid(),
+          getCookieValue(request)));
+      }
+
+      removeSessionCookie(response);
+
+      return handleOkMessage("User account logged out successfully");
     } catch (Exception e) {
+      removeSessionCookie(response);
       return handleBadRequest("Logout failed for user account", e);
     }
-  }
-
-  @ExceptionHandler(Exception.class)
-  private ResponseEntity<?> handleException(Exception e) {
-    return handleBadRequest("Invalid data format", e);
   }
 }
