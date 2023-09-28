@@ -33,7 +33,7 @@ function QuestionsList() {
             </li>
           ))
         ) : (
-          <h1>iz der eny kvescsön</h1>
+          <h3>No questions found</h3>
         )}
       </ul>
     </div>

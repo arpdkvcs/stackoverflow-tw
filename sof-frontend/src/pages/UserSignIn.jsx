@@ -15,7 +15,6 @@ function UserSignIn() {
   const { setAuth } = useAuth();
 
   const handleSignInSubmit = async (user) => {
-    debugger;
     try {
       const responseObject = await publicFetch("auth/login", "POST", user);
       if (!responseObject?.data) {
@@ -35,7 +34,7 @@ function UserSignIn() {
 
   function handleSuccessfulLogin(receivedUsername, receivedRoles) {
     setAuth({ "username": receivedUsername, "roles": receivedRoles });
-    navigate(-1);
+    navigate("/");
   }
 
   const resetForm = () => {

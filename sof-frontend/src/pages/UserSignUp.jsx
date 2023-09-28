@@ -19,14 +19,11 @@ function UserSignUp() {
       const jsonResponse = await publicFetch("/auth/register", "POST", data);
       setUserName("");
       setPassword("");
-
-      debugger;
       if (jsonResponse.message) {
         setRegistrationSuccess(true);
       } else {
         setRegistrationSuccess(false);
-        //we should receive this from the backend as error and handle others differently...
-        window.alert(`Username ${username} is already taken`);
+        window.alert(`Registration failed`);
       }
     } catch (error) {
       setRegistrationSuccess(false);
@@ -77,8 +74,8 @@ function UserSignUp() {
       ) : (
         <div>
           <p>Thank you for registering! Have fun!</p>
-          <Link to="/">
-            <button>Home</button>
+          <Link to="/login">
+            <button>Login</button>
           </Link>
         </div>
       )}
