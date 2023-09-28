@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import publicFetch from "../utility/publicFetch";
 
 
@@ -39,6 +39,7 @@ export default function QuestionDetail() {
           <ul>
             {answers.map(answer => <li>{answer.content}</li>)}
           </ul>
+          <Link to={`/user/questions/${question.id}/addanswer`}><button>Add answer</button></Link>
         </div>
       </div>
     );

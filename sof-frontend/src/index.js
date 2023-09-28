@@ -17,6 +17,7 @@ import UserSignUp from "./pages/UserSignUp";
 import QuestionDetail from "./pages/QuestionDetail";
 import UserLayout from "./pages/user/UserLayout";
 import UserQuestionDetail from "./pages/user/UserQuestionDetails";
+import AddAnswer from "./pages/AddAnswer";
 
 const router = createBrowserRouter([
   /* public */
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
           {
             path: "/user/questions/:id",
             element: <UserQuestionDetail/>
+          },
+          {
+            path: "/user/questions/:id/addanswer",
+            element: <AddAnswer/>
           }
         ]
       }
