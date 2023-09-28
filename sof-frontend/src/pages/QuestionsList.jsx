@@ -25,13 +25,21 @@ function QuestionsList() {
   return (
     <div>
       {error && <p>Error: {error}</p>}
-      <ul>
-        {questions?.length ? questions.map((question) => (
-          <li key={question.id}>
-            Title: {question.title} --- Content: {question.content}
-          </li>
-        )):<h1>iz der eny kvescsön</h1>}
-      </ul>
+      <h2>Browse questions</h2>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Asked by</th>
+        </tr>
+        {questions?.length ? questions.map( (question) => (
+          <tr key={question.id}>
+            <td>{question.title}</td>
+            <td>{question.createdAt}</td>
+            <td>{question.username}</td>
+          </tr>
+        )):<h1>No questions</h1>}
+      </table>
     </div>
   );
 }
