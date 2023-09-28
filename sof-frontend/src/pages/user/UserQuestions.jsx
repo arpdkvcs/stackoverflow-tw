@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import QuestionTable from "../../components/QuestionTable";
 import useAuthFetch from "../../utility/useAuthFetch";
 
-function UserPage() {
+function UserQuestions() {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -47,4 +47,4 @@ function UserPage() {
   );
 }
 
-export default UserPage;
+export default UserQuestions;

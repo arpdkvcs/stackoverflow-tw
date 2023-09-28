@@ -9,13 +9,14 @@ import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import QuestionsList from "./pages/QuestionsList";
 
-import UserPage from "./pages/user/UserPage";
+import UserQuestions from "./pages/user/UserQuestions";
 import AdminPage from "./pages/admin/AdminPage";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
 import UserSignUp from "./pages/UserSignUp";
 import QuestionDetail from "./pages/QuestionDetail";
 import UserLayout from "./pages/user/UserLayout";
+import UserQuestionDetail from "./pages/user/UserQuestionDetails";
 
 const router = createBrowserRouter([
   /* public */
@@ -53,7 +54,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <UserPage/>
+            element: <UserQuestions/>
+          },
+          {
+            path: "/user/questions/:id",
+            element: <UserQuestionDetail/>
           }
         ]
       }
