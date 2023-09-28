@@ -1,4 +1,4 @@
-export async function fetchPublic(path, method = "GET", bodyObject = null){
+export default async function fetchPublic(path, method = "GET", bodyObject = null){
   try {
     const apiUrl = process.env.REACT_APP_API_URL;
     
@@ -14,8 +14,7 @@ export async function fetchPublic(path, method = "GET", bodyObject = null){
     }
 
     const httpResponse = await fetch(`${apiUrl}/${path}`, requestConfig);
-    const responseObject = await httpResponse?.json();
-    return responseObject;
+    return await httpResponse?.json();
   } catch (e) {
     console.error(e);
     return null;

@@ -2,14 +2,17 @@ package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
 import com.codecool.stackoverflowtw.service.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -65,11 +68,23 @@ public class QuestionController extends BaseController {
     }
   }
 
-  @PatchMapping ("/")
-  public ResponseEntity<?> updateQuestion(@RequestBody UpdateQuestionDTO question) {
+  @PatchMapping("/")
+  public ResponseEntity<?> updateQuestion(
+    HttpServletRequest request, @RequestBody Map<String, Object> body) {
     try {
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.updateQuestion(question)));
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+      if (userInfo.isPresent()) {
+
+        UpdateQuestionDTO question = new UpdateQuestionDTO((long) body.get("id"),
+          userInfo.get().userid(),
+          body.get("title").toString(), body.get("content").toString(),
+          (long) body.get("acceptedAnswerId"));
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+          "data", questionService.updateQuestion(question)));
+
+      } else {
+        return handleUnauthorized("Unauthorized", null);
+      }
     } catch (Exception e) {
       return handleBadRequest("Failed to update question.", e);
     }
