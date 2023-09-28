@@ -48,8 +48,8 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
         String sql = "SELECT * FROM questions;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
             Set<QuestionModel> questionModels = new HashSet<>();
 
@@ -66,13 +66,12 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     @Override
     public QuestionModel readById(long questionId)
             throws SQLException, CannotGetJdbcConnectionException {
-        String sql = "SELECT * FROM questions WHERE id = " +
-                questionId +
-                ";";
+        String sql = "SELECT * FROM questions WHERE id = ?;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, questionId);
+            ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
                 return getQuestionModel(rs);

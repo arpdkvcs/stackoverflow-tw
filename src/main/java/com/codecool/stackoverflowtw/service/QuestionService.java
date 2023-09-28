@@ -3,11 +3,11 @@ package com.codecool.stackoverflowtw.service;
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
 import com.codecool.stackoverflowtw.dao.AnswerDAO;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
-import com.codecool.stackoverflowtw.dao.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -40,17 +39,8 @@ public class QuestionService {
             Set<QuestionModel> questionModels = questionsDAO.readAll();
             Set<QuestionResponseDTO> questionResponseDTOs = new HashSet<>();
 
-            for (QuestionModel questionModel : questionModels) {
-                long id = questionModel.getId();
-                String title = questionModel.getTitle();
-                LocalDateTime createdAt = questionModel.getCreatedAt();
-                int answerCount = answerDAO.getNumberOfAnswersForQuestion(id);
-                String username = userDAO.getUsernameById(questionModel.getUserId());
-
-                questionResponseDTOs.add(new QuestionResponseDTO(
-                        id, title, createdAt, answerCount, username));
-            }
-            return questionResponseDTOs;
+            return convertQuestionModelsToQuestionResponseDTOs(
+                    questionResponseDTOs, questionModels);
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
@@ -58,10 +48,11 @@ public class QuestionService {
 
     }
 
-    public QuestionResponseDetailsDTO getQuestionById(int questionId) throws SQLException {
+    public QuestionResponseDetailsDTO getQuestionById(long questionId) throws SQLException {
 
         try {
             QuestionModel questionModel = questionsDAO.readById(questionId);
+
             long id = questionModel.getId();
             String title = questionModel.getTitle();
             String content = questionModel.getContent();
@@ -76,12 +67,86 @@ public class QuestionService {
         }
     }
 
-    public boolean deleteQuestionById(int id) {
-        // TODO
-        return false;
+    public Set<QuestionResponseDTO> getQuestionsByTitle(String searchQuery) throws SQLException {
+
+        try {
+            Set<QuestionResponseDTO> foundQuestions = new HashSet<>();
+            Set<QuestionModel> foundQuestionModels = questionsDAO.readByTitle(searchQuery);
+
+            return convertQuestionModelsToQuestionResponseDTOs(
+                    foundQuestions, foundQuestionModels);
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
     }
 
-    public int addNewQuestion(NewQuestionDTO question) {
+    private Set<QuestionResponseDTO> convertQuestionModelsToQuestionResponseDTOs(Set<QuestionResponseDTO> foundQuestions, Set<QuestionModel> foundQuestionModels) throws SQLException {
+
+        for (QuestionModel questionModel : foundQuestionModels) {
+            long id = questionModel.getId();
+            String title = questionModel.getTitle();
+            LocalDateTime createdAt = questionModel.getCreatedAt();
+            int answerCount = answerDAO.getNumberOfAnswersForQuestion(id);
+            String username = userDAO.getUsernameById(questionModel.getUserId());
+
+            foundQuestions.add(new QuestionResponseDTO(
+                    id, title, createdAt, answerCount, username
+            ));
+        }
+        return foundQuestions;
+    }
+
+    public boolean deleteQuestionById(long id) throws SQLException {
+
+        try {
+            questionsDAO.delete(id);
+            return true;
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    public QuestionResponseDetailsDTO updateQuestion(UpdateQuestionDTO updateQuestionDTO) throws SQLException {
+
+        try {
+            long id = updateQuestionDTO.id();
+            long userId = updateQuestionDTO.userId();
+            String title = updateQuestionDTO.title();
+            String content = updateQuestionDTO.content();
+            long acceptedAnswerId = updateQuestionDTO.acceptedAnswerId();
+
+            questionsDAO.update(new QuestionModel(
+                    id, userId, title, content, null, acceptedAnswerId
+            ));
+
+            try {
+                return getQuestionById(id);
+
+            } catch (CannotGetJdbcConnectionException e) {
+                throw new SQLException(e);
+            }
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    public int addNewQuestion(NewQuestionDTO question) throws SQLException {
+
+        try {
+            long userId = question.userId();
+            String title = question.title();
+            String content = question.content();
+
+            questionsDAO.create(new QuestionModel(
+                    -1, userId, title, content, null, -1));
+
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new SQLException(e);
+        }
         // TODO
         int createdId = 0;
         return createdId;
