@@ -15,6 +15,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
 import UserSignUp from "./pages/UserSignUp";
+import QuestionDetail from "./pages/QuestionDetail";
 
 const router = createBrowserRouter([
   /* public */
@@ -32,8 +33,12 @@ const router = createBrowserRouter([
         element: <QuestionsList/>
       },
       {
-        path: "/login",
-        element: <UserSignIn/>
+        path: "/questiondetails/:id",
+        element: <QuestionDetail />
+      },
+      {
+        path:"/login",
+        element:<UserSignIn/>
       },
       {
         path: "/register",

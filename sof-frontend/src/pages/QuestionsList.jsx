@@ -1,9 +1,12 @@
 import {useEffect, useState} from "react";
 import publicFetch from "../utility/publicFetch";
+import QuestionTable from "../components/QuestionTable";
 
 function QuestionsList() {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -15,6 +18,7 @@ function QuestionsList() {
         }
         const data = responseObject.data;
         setQuestions(data);
+        setFilteredQuestions(data);
       } catch (error) {
         setError(error.message);
       }
@@ -22,18 +26,19 @@ function QuestionsList() {
     fetchQuestions();
   }, []);
 
+  function handleSearch(e) {
+    setSearch(e.target.value);
+    const allQuestions = [...questions];
+    const filteredQuestions = allQuestions.filter(question => question.title.includes(e.target.value));
+    setFilteredQuestions(filteredQuestions);
+  }
+
   return (
-    <div>
-      {error && <p>Error: {error}</p>}
-      <ul>
-        {questions?.length ? questions.map((question) => (
-          <li key={question.id}>
-            Title: {question.title} --- Content: {question.content}
-          </li>
-        )) : <h1>iz der eny kvescsön</h1>}
-      </ul>
-    </div>
-  );
+      <div>
+        Search: <input type=text onChange={(e) => handleSearch(e)} value={search}></input>
+        <QuestionTable question={filteredQuestions}/>
+      </div>
+  )
 }
 
 export default QuestionsList;
