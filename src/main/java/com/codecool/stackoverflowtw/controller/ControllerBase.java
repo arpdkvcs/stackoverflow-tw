@@ -1,7 +1,7 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
-import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.model.Role;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
 import jakarta.servlet.http.Cookie;
@@ -23,13 +23,13 @@ import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:5000")
 @RestController
-public abstract class BaseController {
+public abstract class ControllerBase {
   protected final TokenService tokenService;
   protected final AccessControlService accessControlService;
   protected final Logger logger;
 
   @Autowired
-  public BaseController(TokenService tokenService, AccessControlService accessControlService) {
+  public ControllerBase(TokenService tokenService, AccessControlService accessControlService) {
     this.tokenService = tokenService;
     this.accessControlService = accessControlService;
     logger = LoggerFactory.getLogger(this.getClass());

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/answers")
-public class AnswerController extends BaseController {
+public class AnswerController extends ControllerBase {
     private final AnswerService answerService;
 
   public AnswerController(TokenService tokenService,

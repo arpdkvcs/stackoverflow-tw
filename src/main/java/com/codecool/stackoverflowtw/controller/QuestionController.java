@@ -3,7 +3,7 @@ package com.codecool.stackoverflowtw.controller;
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
-import com.codecool.stackoverflowtw.service.QuestionService;
+import com.codecool.stackoverflowtw.service.question.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5000")
 @RestController
 @RequestMapping("api/questions")
-public class QuestionController extends BaseController {
+public class QuestionController extends ControllerBase {
   private final QuestionService questionService;
 
   public QuestionController(TokenService tokenService,

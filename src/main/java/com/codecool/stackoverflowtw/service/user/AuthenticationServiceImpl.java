@@ -1,9 +1,9 @@
 package com.codecool.stackoverflowtw.service.user;
 
 import com.codecool.stackoverflowtw.controller.dto.user.*;
+import com.codecool.stackoverflowtw.dao.model.UserModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
-import com.codecool.stackoverflowtw.dao.user.model.Role;
-import com.codecool.stackoverflowtw.dao.user.model.User;
+import com.codecool.stackoverflowtw.dao.model.Role;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Transactional(rollbackFor = Exception.class)
   public void register(NewUserDTO user) throws Exception {
     userDAO.create(user.username(), BCrypt.hashpw(user.password(), BCrypt.gensalt(10)));
-    Optional<User> foundUser = userDAO.readByUsername(user.username());
+    Optional<UserModel> foundUser = userDAO.readByUsername(user.username());
     if (foundUser.isPresent()) {
       accessControlService.assignToUser(foundUser.get().getId(), Role.USER);
     } else {
@@ -39,19 +39,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public LoginResponseDTO login(LoginUserDTO user) throws Exception {
-    Optional<User> userToFind = userDAO.readByUsername(user.username());
+    Optional<UserModel> userToFind = userDAO.readByUsername(user.username());
     if (userToFind.isEmpty()) {
       throw new RuntimeException("Username or password doesn't match");
     }
 
-    User foundUser = userToFind.get();
+    UserModel foundUser = userToFind.get();
     if (!BCrypt.checkpw(user.password(), foundUser.getHashedPassword())) {
       throw new RuntimeException("Username or password doesn't match");
     }
 
     //Set<Role> roles = accessControlService.readAllOfUser(foundUser.getId());
     if (!foundUser.getRoles().contains(Role.USER)) {
-      throw new RuntimeException("User account with username " + user.username() +
+      throw new RuntimeException("UserModel account with username " + user.username() +
         " is deactivated");
     }
 

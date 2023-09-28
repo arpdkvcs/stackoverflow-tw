@@ -1,7 +1,7 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.user.*;
-import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.model.Role;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.AuthenticationService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
@@ -21,7 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController extends BaseController {
+public class AuthenticationController extends ControllerBase {
 
   private final AuthenticationService authenticationService;
 
@@ -39,7 +39,7 @@ public class AuthenticationController extends BaseController {
   public ResponseEntity<?> register(@RequestBody NewUserDTO newUserDTO) {
     try {
       authenticationService.register(newUserDTO);
-      return handleOkMessage("User account created successfully");
+      return handleOkMessage("UserModel account created successfully");
     } catch (Exception e) {
       return handleBadRequest("Failed to create user account", e);
     }
@@ -63,7 +63,7 @@ public class AuthenticationController extends BaseController {
       responseData.put("username", loginResponse.username());
       responseData.put("roles", loginResponse.roles());
 
-      return handleOkData("User account logged in successfully", responseData);
+      return handleOkData("UserModel account logged in successfully", responseData);
     } catch (Exception e) {
       return handleUnauthorized("Login failed for user account", e);
     }
@@ -110,7 +110,7 @@ public class AuthenticationController extends BaseController {
 
       removeSessionCookie(response);
 
-      return handleOkMessage("User account logged out successfully");
+      return handleOkMessage("UserModel account logged out successfully");
     } catch (Exception e) {
       removeSessionCookie(response);
       return handleBadRequest("Logout failed for user account", e);

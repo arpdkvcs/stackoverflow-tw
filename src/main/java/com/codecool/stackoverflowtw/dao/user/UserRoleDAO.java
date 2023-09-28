@@ -1,6 +1,6 @@
 package com.codecool.stackoverflowtw.dao.user;
 
-import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.model.Role;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.sql.SQLException;

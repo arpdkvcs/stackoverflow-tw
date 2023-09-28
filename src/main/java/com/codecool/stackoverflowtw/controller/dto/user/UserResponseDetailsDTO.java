@@ -1,6 +1,6 @@
 package com.codecool.stackoverflowtw.controller.dto.user;
 
-import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.model.Role;
 
 import java.util.Set;
 

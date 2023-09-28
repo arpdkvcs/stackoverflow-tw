@@ -1,11 +1,11 @@
-package com.codecool.stackoverflowtw.service;
+package com.codecool.stackoverflowtw.service.question;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
-import com.codecool.stackoverflowtw.dao.AnswerDAO;
-import com.codecool.stackoverflowtw.dao.QuestionsDAO;
+import com.codecool.stackoverflowtw.dao.answer.AnswerDAO;
+import com.codecool.stackoverflowtw.dao.question.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;

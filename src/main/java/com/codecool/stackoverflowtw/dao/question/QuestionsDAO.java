@@ -1,4 +1,4 @@
-package com.codecool.stackoverflowtw.dao;
+package com.codecool.stackoverflowtw.dao.question;
 
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 

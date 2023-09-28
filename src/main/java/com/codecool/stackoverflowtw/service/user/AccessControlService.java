@@ -1,6 +1,6 @@
 package com.codecool.stackoverflowtw.service.user;
 
-import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.model.Role;
 
 import java.sql.SQLException;
 import java.util.Set;

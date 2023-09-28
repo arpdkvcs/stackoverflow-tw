@@ -1,6 +1,6 @@
 package com.codecool.stackoverflowtw.dao.user;
 
-import com.codecool.stackoverflowtw.dao.user.model.User;
+import com.codecool.stackoverflowtw.dao.model.UserModel;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.sql.SQLException;
@@ -8,12 +8,12 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface UserDAO {
-  Set<User> readAll() throws SQLException, CannotGetJdbcConnectionException;
+  Set<UserModel> readAll() throws SQLException, CannotGetJdbcConnectionException;
 
-  Optional<User> readByUsername(String username) throws SQLException,
+  Optional<UserModel> readByUsername(String username) throws SQLException,
     CannotGetJdbcConnectionException;
 
-  Optional<User> readById(long id) throws SQLException, CannotGetJdbcConnectionException;
+  Optional<UserModel> readById(long id) throws SQLException, CannotGetJdbcConnectionException;
 
   void create(String username, String hashedPassword)
     throws SQLException, CannotGetJdbcConnectionException;

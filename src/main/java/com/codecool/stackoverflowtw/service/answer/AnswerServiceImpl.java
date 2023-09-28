@@ -3,7 +3,7 @@ package com.codecool.stackoverflowtw.service.answer;
 import com.codecool.stackoverflowtw.controller.dto.answer.AnswerResponseDetailsDTO;
 import com.codecool.stackoverflowtw.controller.dto.answer.NewAnswerDTO;
 import com.codecool.stackoverflowtw.controller.dto.answer.UpdateAnswerDTO;
-import com.codecool.stackoverflowtw.dao.AnswerDAO;
+import com.codecool.stackoverflowtw.dao.answer.AnswerDAO;
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;

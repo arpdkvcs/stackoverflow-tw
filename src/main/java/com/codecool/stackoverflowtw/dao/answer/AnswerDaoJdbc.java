@@ -1,5 +1,6 @@
-package com.codecool.stackoverflowtw.dao;
+package com.codecool.stackoverflowtw.dao.answer;
 
+import com.codecool.stackoverflowtw.dao.BaseDaoJdbc;
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;

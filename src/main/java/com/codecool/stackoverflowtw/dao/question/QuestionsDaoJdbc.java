@@ -1,5 +1,6 @@
-package com.codecool.stackoverflowtw.dao;
+package com.codecool.stackoverflowtw.dao.question;
 
+import com.codecool.stackoverflowtw.dao.BaseDaoJdbc;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, questionId);
             ResultSet rs = pstmt.executeQuery();
-            
+
             if (rs.next()) {
                 return getQuestionModel(rs);
             }
