@@ -2,9 +2,6 @@ package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
-import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
-import com.codecool.stackoverflowtw.dao.user.model.Role;
 import com.codecool.stackoverflowtw.service.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
@@ -14,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 import java.util.Map;
-import java.util.Set;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -50,7 +44,6 @@ public class QuestionController {
         HttpStatus.BAD_REQUEST.value(), "error", "Failed to retrieve questions."));
     }
   }
-/*
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuestionById(@PathVariable int id) {
         try {

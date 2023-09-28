@@ -1,11 +1,9 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.user.*;
+import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.AuthenticationService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,23 +12,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController {
+public class AuthenticationController extends BaseController {
 
   private final AuthenticationService authenticationService;
-  private final TokenService tokenService;
-  private final Logger logger;
 
-  @Autowired
-  public AuthenticationController(AuthenticationService authenticationService, TokenService tokenService) {
+  public AuthenticationController(TokenService tokenService,
+                                  AccessControlService accessControlService,
+                                  AuthenticationService authenticationService) {
+    super(tokenService, accessControlService);
     this.authenticationService = authenticationService;
-    this.tokenService = tokenService;
-    this.logger = LoggerFactory.getLogger(this.getClass());
-  }
-
-  private ResponseEntity<?> handleBadRequest(String message, Exception e) {
-    logger.error(message, e);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-      HttpStatus.BAD_REQUEST.value(), "error", message));
   }
 
   @PostMapping("/register")
@@ -51,7 +41,7 @@ public class AuthenticationController {
       return ResponseEntity.ok(Map.of("status", HttpStatus.OK.value(),
         "data", loginResponse));
     } catch (Exception e) {
-      return handleBadRequest("Login failed for user account", e);
+      return handleUnauthorized("Login failed for user account", e);
     }
   }
 
@@ -76,10 +66,5 @@ public class AuthenticationController {
     } catch (Exception e) {
       return handleBadRequest("Logout failed for user account", e);
     }
-  }
-
-  @ExceptionHandler(Exception.class)
-  private ResponseEntity<?> handleException(Exception e) {
-    return handleBadRequest("Invalid data format", e);
   }
 }
