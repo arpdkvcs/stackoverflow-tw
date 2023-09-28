@@ -96,15 +96,16 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, questionId);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                answers.add(new AnswerModel(
-                        resultSet.getLong("id"),
-                        resultSet.getLong("user_id"),
-                        resultSet.getLong("question_id"),
-                        resultSet.getString("content"),
-                        resultSet.getTimestamp("created_at").toLocalDateTime()));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    answers.add(new AnswerModel(
+                            resultSet.getLong("id"),
+                            resultSet.getLong("user_id"),
+                            resultSet.getLong("question_id"),
+                            resultSet.getString("content"),
+                            resultSet.getTimestamp("created_at").toLocalDateTime()));
+                }
             }
         } finally {
             releaseConnectionIfNoTransaction(conn);
