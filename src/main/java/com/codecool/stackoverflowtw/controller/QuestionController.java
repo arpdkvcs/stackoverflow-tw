@@ -1,13 +1,18 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
 import com.codecool.stackoverflowtw.service.question.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.Set;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -47,6 +52,22 @@ public class QuestionController extends ControllerBase {
       return handleOkData("Successful request", questionService.getQuestionsByTitle(searchQuery));
     } catch (Exception e) {
       return handleBadRequest("Failed to perform search.", e);
+    }
+  }
+
+  @GetMapping("/user")
+  public ResponseEntity<?> getQuestionsByUserId(HttpServletRequest request) {
+    try {
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+      if (userInfo.isPresent()) {
+        Set<QuestionResponseDTO> questions =
+          questionService.getQuestionsByUserId(userInfo.get().userid());
+        return handleOkData("Successful request", questions);
+      } else {
+        return handleUnauthorized("Unauthorized", null);
+      }
+    } catch (Exception e) {
+      return handleBadRequest("Failed to retrieve questions", e);
     }
   }
 

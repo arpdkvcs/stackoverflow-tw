@@ -113,6 +113,27 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
   }
 
   @Override
+  public Set<QuestionModel> readByUserId(Long userId)
+    throws SQLException, CannotGetJdbcConnectionException {
+    Set<QuestionModel> questionModels = new HashSet<>();
+    String sql = "SELECT * FROM questions WHERE user_id = ?;";
+
+    Connection conn = DataSourceUtils.getConnection(dataSource);
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setLong(1,userId);
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        questionModels.add(getQuestionModel(rs));
+      }
+
+    } finally {
+      releaseConnectionIfNoTransaction(conn);
+    }
+    return questionModels;
+  }
+
+  @Override
   public void update(QuestionModel questionModel)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "UPDATE questions SET " +

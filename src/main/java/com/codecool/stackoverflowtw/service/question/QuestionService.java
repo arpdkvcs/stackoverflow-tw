@@ -115,6 +115,19 @@ public class QuestionService {
     }
   }
 
+  public Set<QuestionResponseDTO> getQuestionsByUserId(Long userId) throws SQLException {
+    try {
+      Set<QuestionResponseDTO> foundQuestions = new HashSet<>();
+      Set<QuestionModel> foundQuestionModels = questionsDAO.readByUserId(userId);
+
+      return convertQuestionModelsToQuestionResponseDTOs(
+        foundQuestions, foundQuestionModels);
+
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
+    }
+  }
+
   private Set<QuestionResponseDTO> convertQuestionModelsToQuestionResponseDTOs(Set<QuestionResponseDTO> foundQuestions, Set<QuestionModel> foundQuestionModels) throws SQLException {
 
     for (QuestionModel questionModel : foundQuestionModels) {

@@ -13,7 +13,7 @@ function UserQuestions() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const responseObject = await fetchWithAuth("questions/all");
+        const responseObject = await fetchWithAuth("questions/user");
 
         if (!responseObject?.data) {
           throw new Error(responseObject?.error ?? "Failed to load questions");
