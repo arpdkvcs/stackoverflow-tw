@@ -1,18 +1,18 @@
 import UseAuthFetch from "../utility/useAuthFetch";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import useAuth from "../utility/useAuth";
 
 export default function AddAnswer() {
   const {id} = useParams();
   const {auth} = useAuth();
+  const navigate = useNavigate();
 
   const fetchWithAuth = UseAuthFetch();
   const [answer, setAnswer] = useState(null);
 
   useEffect(() => {
     async function postAnswer() {
-      debugger;
       try {
         const responseObject = await fetchWithAuth(
           `answers`,
@@ -21,6 +21,7 @@ export default function AddAnswer() {
         );
         if (responseObject?.message) {
           window.alert(responseObject.message);
+          navigate(`/user/questions/${id}`);
         } else {
           throw new Error("Failed to add answer");
         }

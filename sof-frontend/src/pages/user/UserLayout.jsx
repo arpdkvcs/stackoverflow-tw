@@ -15,8 +15,8 @@ function UserLayout() {
           <Link to="/user">
             <button>Questions</button>
           </Link>
-          <Link to="/user/">
-            <button>Questions</button>
+          <Link to="/user/questions/add">
+            <button>Add new question</button>
           </Link>
           {auth?.username && (
             <UserLogout/>
