@@ -64,3 +64,12 @@ h3 {
 #submitlogin:hover {
     background-color: #0056b3; /* Darker shade of blue */
 }
+
+.clickable-text {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-text:hover {
+    color: yellowgreen;
+}
