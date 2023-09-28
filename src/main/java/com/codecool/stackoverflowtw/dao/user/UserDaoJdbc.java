@@ -1,8 +1,8 @@
 package com.codecool.stackoverflowtw.dao.user;
 
 import com.codecool.stackoverflowtw.dao.BaseDaoJdbc;
-import com.codecool.stackoverflowtw.dao.model.Role;
-import com.codecool.stackoverflowtw.dao.model.UserModel;
+import com.codecool.stackoverflowtw.dao.user.model.Role;
+import com.codecool.stackoverflowtw.dao.user.model.User;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
@@ -22,15 +22,15 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
     super(dataSource);
   }
 
-  private Set<UserModel> getUsersSet(ResultSet rs) throws SQLException {
+  private Set<User> getUsersSet(ResultSet rs) throws SQLException {
     //TODO: ???
-    Set<UserModel> users = new HashSet<>();
+    Set<User> users = new HashSet<>();
     while (rs.next()) {
       long userId = rs.getLong("id");
-      UserModel user = users.stream().filter(u -> u.getId() == userId).findFirst().orElse(null);
+      User user = users.stream().filter(u -> u.getId() == userId).findFirst().orElse(null);
 
       if (user == null) {
-        user = new UserModel(
+        user = new User(
           userId,
           rs.getString("username"),
           rs.getString("password"),
@@ -53,12 +53,12 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
     return users;
   }
 
-  private Optional<UserModel> getUserObject(ResultSet rs) throws SQLException {
+  private Optional<User> getUserObject(ResultSet rs) throws SQLException {
     //TODO: ???
-    UserModel user = null;
+    User user = null;
     while (rs.next()) {
       if (user == null) {
-        user = new UserModel(
+        user = new User(
           rs.getLong("id"),
           rs.getString("username"),
           rs.getString("password"),
@@ -82,7 +82,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public Set<UserModel> readAll() throws SQLException, CannotGetJdbcConnectionException {
+  public Set<User> readAll() throws SQLException, CannotGetJdbcConnectionException {
     String sql =
       "SELECT u.id, u.username, u.password, r.name AS role_name, us.token AS token " +
         "FROM users u " +
@@ -102,7 +102,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public Optional<UserModel> readByUsername(String username)
+  public Optional<User> readByUsername(String username)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT u.id, u.username, u.password, r.name AS role_name, us.token AS token " +
       "FROM users u " +
@@ -124,7 +124,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public Optional<UserModel> readById(long id) throws SQLException, CannotGetJdbcConnectionException {
+  public Optional<User> readById(Long id) throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT u.id, u.username, u.password, r.name AS role_name, us.token AS token " +
       "FROM users u " +
       "LEFT JOIN user_roles ur ON u.id = ur.user_id " +
@@ -164,7 +164,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public void update(long id, String username, String hashedPassword)
+  public void update(Long id, String username, String hashedPassword)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "UPDATE users SET username = ?, password = ? WHERE id = ?;";
 
@@ -185,7 +185,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public void delete(long id) throws SQLException, CannotGetJdbcConnectionException {
+  public void delete(Long id) throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM users WHERE id = ?;";
     Connection conn = DataSourceUtils.getConnection(dataSource);
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -201,7 +201,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public String getUsernameById(long userId)
+  public String getUsernameById(Long userId)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT username FROM users WHERE id = ?;";
 
@@ -214,7 +214,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
       if (rs.next()) {
         return rs.getString("username");
       } else {
-        throw new SQLException("UserModel with ID " + userId + " not found");
+        throw new SQLException("User with ID " + userId + " not found");
       }
     } finally {
       releaseConnectionIfNoTransaction(conn);

@@ -39,7 +39,7 @@ public class QuestionController extends ControllerBase {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getQuestionById(@PathVariable int id) {
+  public ResponseEntity<?> getQuestionById(@PathVariable Long id) {
     try {
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
         "data", questionService.getQuestionById(id)));
@@ -48,7 +48,7 @@ public class QuestionController extends ControllerBase {
     }
   }
 
-  @GetMapping("/search/questions/{searchQuery}")
+  @GetMapping("/search/{searchQuery}")
   public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
     try {
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
@@ -58,20 +58,40 @@ public class QuestionController extends ControllerBase {
     }
   }
 
-  @PostMapping("/")
-  public ResponseEntity<?> addNewQuestion(@RequestBody NewQuestionDTO question) {
+  @PostMapping("")
+  public ResponseEntity<?> addNewQuestion(
+          HttpServletRequest request, @RequestBody NewQuestionDTO newQuestionDTO) {
     try {
+      /*
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+
+      if (userInfo.isPresent()) {
+        NewQuestionDTO question = new NewQuestionDTO(
+                userInfo.get().userid(),
+                body.get("title").toString(),
+                body.get("content").toString()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+                "data", questionService.addNewQuestion(question)));
+      } else {
+        return handleUnauthorized("Unauthorized", null);
+      }
+
+       */
+
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.addNewQuestion(question)));
+              "data", questionService.addNewQuestion(newQuestionDTO)));
+
     } catch (Exception e) {
       return handleBadRequest("Failed to post new question.", e);
     }
   }
 
-  @PatchMapping("/")
+  @PatchMapping("")
   public ResponseEntity<?> updateQuestion(
-    HttpServletRequest request, @RequestBody Map<String, Object> body) {
+    HttpServletRequest request, @RequestBody UpdateQuestionDTO updateQuestionDTO) {
     try {
+      /*
       Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
       if (userInfo.isPresent()) {
 
@@ -85,13 +105,19 @@ public class QuestionController extends ControllerBase {
       } else {
         return handleUnauthorized("Unauthorized", null);
       }
+
+       */
+
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+              "data", questionService.updateQuestion(updateQuestionDTO)));
+
     } catch (Exception e) {
       return handleBadRequest("Failed to update question.", e);
     }
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteQuestionById(@PathVariable long id) {
+  public ResponseEntity<?> deleteQuestionById(@PathVariable Long id) {
     try {
       questionService.deleteQuestionById(id);
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),

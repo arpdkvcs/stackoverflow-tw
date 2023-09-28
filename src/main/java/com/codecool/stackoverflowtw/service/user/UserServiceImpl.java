@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Optional<UserResponseDetailsDTO> readById(long id) throws SQLException {
+  public Optional<UserResponseDetailsDTO> readById(Long id) throws SQLException {
     try {
       Optional<UserModel> userModel = userDAO.readById(id);
       return getUserResponseDetailsDTO(userModel);
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void delete(long id) throws SQLException {
+  public void delete(Long id) throws SQLException {
     try {
       userDAO.delete(id);
     } catch (CannotGetJdbcConnectionException e) {

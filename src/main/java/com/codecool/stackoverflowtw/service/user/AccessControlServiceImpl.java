@@ -20,7 +20,7 @@ public class AccessControlServiceImpl implements AccessControlService {
 
 
   @Override
-  public Set<Role> readAllOfUser(long userid) throws SQLException {
+  public Set<Role> readAllOfUser(Long userid) throws SQLException {
     try {
       return roleDAO.readAllOfUser(userid);
     } catch (CannotGetJdbcConnectionException e) {
@@ -29,7 +29,7 @@ public class AccessControlServiceImpl implements AccessControlService {
   }
 
   @Override
-  public void assignToUser(long userid, Role role)
+  public void assignToUser(Long userid, Role role)
     throws SQLException {
     try {
       roleDAO.assignToUser(userid, role);
@@ -39,7 +39,7 @@ public class AccessControlServiceImpl implements AccessControlService {
   }
 
   @Override
-  public void removeFromUser(long userid, Role role)
+  public void removeFromUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException {
     try {
       roleDAO.removeFromUser(userid, role);
@@ -49,7 +49,7 @@ public class AccessControlServiceImpl implements AccessControlService {
   }
 
   @Override
-  public boolean verifyRoleOfUser(long userid, Role role)
+  public boolean verifyRoleOfUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException {
     try {
       return roleDAO.verifyRoleOfUser(userid, role);

@@ -1,8 +1,8 @@
 package com.codecool.stackoverflowtw.controller.dto.question;
 
-public record UpdateQuestionDTO(long id,
-                                long userId,
+public record UpdateQuestionDTO(Long id,
+                                Long userId,
                                 String title,
                                 String content,
-                                long acceptedAnswerId) {
+                                Long acceptedAnswerId) {
 }

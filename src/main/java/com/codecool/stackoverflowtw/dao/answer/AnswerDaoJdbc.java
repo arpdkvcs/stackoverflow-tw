@@ -70,7 +70,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
   //delete an answer
   @Override
-  public void deleteAnswer(long id)
+  public void deleteAnswer(Long id)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM answers WHERE id=?";
 
@@ -89,7 +89,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
   //fetch answers for a specific question
   @Override
-  public Set<AnswerModel> getAnswersByQuestionId(long questionId)
+  public Set<AnswerModel> getAnswersByQuestionId(Long questionId)
     throws SQLException, CannotGetJdbcConnectionException {
     Set<AnswerModel> answers = new HashSet<>();
     String sql = "SELECT * FROM answers WHERE question_id=?";
@@ -116,7 +116,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
   }
 
   @Override
-  public int getNumberOfAnswersForQuestion(long questionId)
+  public int getNumberOfAnswersForQuestion(Long questionId)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT COUNT(id) FROM answers WHERE question_id = ?;";
     Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -137,7 +137,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
   }
 
   @Override
-  public Set<Long> getAnswersIdsForQuestion(long questionId)
+  public Set<Long> getAnswersIdsForQuestion(Long questionId)
     throws SQLException, CannotGetJdbcConnectionException {
     Set<Long> answers = new HashSet<>();
     String sql = "SELECT id FROM answers WHERE question_id=?";
@@ -158,7 +158,7 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
   }
 
   @Override
-  public List<AnswerModel> getAnswerByQuestionId(long questionId) {
+  public List<AnswerModel> getAnswerByQuestionId(Long questionId) {
     //TODO: impl
     return null;
   }

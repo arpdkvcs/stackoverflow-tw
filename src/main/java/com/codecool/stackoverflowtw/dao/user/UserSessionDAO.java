@@ -6,15 +6,15 @@ import java.sql.SQLException;
 import java.util.Set;
 
 public interface UserSessionDAO {
-  Set<String> readAllOfUser(long userid)
+  Set<String> readAllOfUser(Long userid)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void addToUser(long userid, String hashedSessionToken)
+  void addToUser(Long userid, String hashedSessionToken)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void removeFromUser(long userid, String hashedSessionToken)
+  void removeFromUser(Long userid, String hashedSessionToken)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void removeAllFromUser(long userid)
+  void removeAllFromUser(Long userid)
     throws SQLException, CannotGetJdbcConnectionException;
 }

@@ -15,15 +15,15 @@ public interface AnswerDAO {
     void updateAnswer(AnswerModel answer) throws SQLException;
 
     //delete an answer
-    void deleteAnswer(long id) throws SQLException;
+    void deleteAnswer(Long id) throws SQLException;
 
 
     //fetch answers for a specific question
-    Set<AnswerModel> getAnswersByQuestionId(long questionId) throws SQLException;
+    Set<AnswerModel> getAnswersByQuestionId(Long questionId) throws SQLException;
 
-    int getNumberOfAnswersForQuestion(long questionId) throws SQLException;
+    int getNumberOfAnswersForQuestion(Long questionId) throws SQLException;
 
-    Set<Long> getAnswersIdsForQuestion(long questionId) throws SQLException;
+    Set<Long> getAnswersIdsForQuestion(Long questionId) throws SQLException;
 
-  List<AnswerModel> getAnswerByQuestionId(long questionId);
+  List<AnswerModel> getAnswerByQuestionId(Long questionId);
 }

@@ -1,4 +1,4 @@
 package com.codecool.stackoverflowtw.controller.dto.answer;
 
-public record NewAnswerDTO(long userId, String content) {
+public record NewAnswerDTO(Long userId, Long questionId, String content) {
 }

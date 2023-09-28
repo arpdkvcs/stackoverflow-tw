@@ -90,7 +90,7 @@ public class TokenServiceImpl implements TokenService {
 
 
   @Override
-  public Set<String> readAllOfUser(long userid) throws SQLException {
+  public Set<String> readAllOfUser(Long userid) throws SQLException {
     try {
       return userSessionDAO.readAllOfUser(userid);
     } catch (CannotGetJdbcConnectionException e) {
@@ -100,7 +100,7 @@ public class TokenServiceImpl implements TokenService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void addToUser(long userid, String rawRefreshToken) throws SQLException {
+  public void addToUser(Long userid, String rawRefreshToken) throws SQLException {
     try {
       userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
     } catch (CannotGetJdbcConnectionException e) {
@@ -110,7 +110,7 @@ public class TokenServiceImpl implements TokenService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void removeFromUser(long userid, String rawSessionToken)
+  public void removeFromUser(Long userid, String rawSessionToken)
     throws SQLException {
     try {
       Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userid);
@@ -132,7 +132,7 @@ public class TokenServiceImpl implements TokenService {
   }
 
   @Override
-  public void removeAllFromUser(long userid) throws SQLException {
+  public void removeAllFromUser(Long userid) throws SQLException {
     try {
       userSessionDAO.removeAllFromUser(userid);
     } catch (CannotGetJdbcConnectionException e) {

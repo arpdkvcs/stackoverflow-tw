@@ -111,11 +111,11 @@ public class QuestionService {
     public QuestionResponseDetailsDTO updateQuestion(UpdateQuestionDTO updateQuestionDTO) throws SQLException {
 
         try {
-            long id = updateQuestionDTO.id();
-            long userId = updateQuestionDTO.userId();
+            Long id = updateQuestionDTO.id();
+            Long userId = updateQuestionDTO.userId();
             String title = updateQuestionDTO.title();
             String content = updateQuestionDTO.content();
-            long acceptedAnswerId = updateQuestionDTO.acceptedAnswerId();
+            Long acceptedAnswerId = null;
 
             questionsDAO.update(new QuestionModel(
                     id, userId, title, content, null, acceptedAnswerId
@@ -136,19 +136,16 @@ public class QuestionService {
     public int addNewQuestion(NewQuestionDTO question) throws SQLException {
 
         try {
-            long userId = question.userId();
+            Long userId = question.userId();
             String title = question.title();
             String content = question.content();
 
-            questionsDAO.create(new QuestionModel(
-                    -1, userId, title, content, null, -1));
+            return questionsDAO.create(new QuestionModel(
+                    null, userId, title, content, null, null));
 
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }
-        // TODO
-        int createdId = 0;
-        return createdId;
     }
 }
