@@ -13,7 +13,8 @@
 - Run main
 
 ### Frontend setup
-- run 'npm i' in 'sof-frontend directory' 
+
+- run 'npm i' in 'sof-frontend directory'
 - rename env.txt according to instructions
 - start backend (run StackoverflowTwApplication.java class)
 - run npm start

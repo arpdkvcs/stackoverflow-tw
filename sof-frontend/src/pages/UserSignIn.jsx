@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {useState} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import "./UserSignIn.css";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function UserSignIn() {
   const [userName, setUserName] = useState("");
@@ -15,7 +15,7 @@ function UserSignIn() {
         "/actualURL",
         /*input our endpointURL that handles signing in*/ {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {"Content-Type": "application/json"},
           body: JSON.stringify(user)
         }
       );

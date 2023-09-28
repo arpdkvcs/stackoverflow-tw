@@ -8,9 +8,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface AnswerService {
-    void createAnswer(NewAnswerDTO newAnswerDTO) throws SQLException;
-    void updateAnswer(UpdateAnswerDTO updateAnswerDTO) throws SQLException;
-    void deleteAnswer(long id) throws SQLException;
-    List<AnswerResponseDetailsDTO> getAnswerByQuestionId(long questionId) throws SQLException;
+  void createAnswer(NewAnswerDTO newAnswerDTO) throws SQLException;
+
+  void updateAnswer(UpdateAnswerDTO updateAnswerDTO) throws SQLException;
+
+  void deleteAnswer(long id) throws SQLException;
+
+  List<AnswerResponseDetailsDTO> getAnswerByQuestionId(long questionId) throws SQLException;
 
 }

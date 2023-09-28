@@ -1,12 +1,12 @@
-import { createContext, useState } from "react";
+import {createContext, useState} from "react";
 
 const AuthContext = createContext({});
 
 //make this state reachable in everything this wraps
-export function AuthProvider({ children }) {
+export function AuthProvider({children}) {
   const [auth, setAuth] = useState({});
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{auth, setAuth}}>
       {children}
     </AuthContext.Provider>
   );

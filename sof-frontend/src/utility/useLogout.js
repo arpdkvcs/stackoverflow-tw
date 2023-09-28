@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import {useCallback} from "react";
 import useAuth from "./useAuth";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function useLogout() {
-  const { setAuth } = useAuth();
+  const {setAuth} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,7 +24,7 @@ function useLogout() {
         console.error(err);
       } finally {
         const path = willfulLogout ? "/" : "/login";
-        navigate(path, { state: { from: location }, replace: true });
+        navigate(path, {state: {from: location}, replace: true});
         setAuth({});
       }
     },

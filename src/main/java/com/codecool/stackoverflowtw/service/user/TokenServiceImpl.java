@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
-import com.codecool.stackoverflowtw.dao.user.UserSessionDAO;
 import com.codecool.stackoverflowtw.dao.model.Role;
+import com.codecool.stackoverflowtw.dao.user.UserSessionDAO;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,7 +93,7 @@ public class TokenServiceImpl implements TokenService {
 
 
   @Override
-  public Set<String> readAllOfUser(long userid) throws SQLException {
+  public Set<String> readAllOfUser(Long userid) throws SQLException {
     try {
       return userSessionDAO.readAllOfUser(userid);
     } catch (CannotGetJdbcConnectionException e) {
@@ -100,7 +103,7 @@ public class TokenServiceImpl implements TokenService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void addToUser(long userid, String rawRefreshToken) throws SQLException {
+  public void addToUser(Long userid, String rawRefreshToken) throws SQLException {
     try {
       userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
     } catch (CannotGetJdbcConnectionException e) {
@@ -110,7 +113,7 @@ public class TokenServiceImpl implements TokenService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void removeFromUser(long userid, String rawSessionToken)
+  public void removeFromUser(Long userid, String rawSessionToken)
     throws SQLException {
     try {
       Set<String> hashedSessionTokens = userSessionDAO.readAllOfUser(userid);
@@ -132,7 +135,7 @@ public class TokenServiceImpl implements TokenService {
   }
 
   @Override
-  public void removeAllFromUser(long userid) throws SQLException {
+  public void removeAllFromUser(Long userid) throws SQLException {
     try {
       userSessionDAO.removeAllFromUser(userid);
     } catch (CannotGetJdbcConnectionException e) {

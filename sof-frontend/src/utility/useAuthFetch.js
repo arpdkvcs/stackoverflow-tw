@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import {useCallback} from "react";
 import useAuth from "./auth/useAuth";
 import useLogout from "./auth/useLogout";
 
 function UseAuthFetch() {
-  const { auth } = useAuth();
+  const {auth} = useAuth();
   const logout = useLogout();
   const apiUrl = process.env.REACT_APP_API_PRIV_URL;
 

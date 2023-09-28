@@ -10,11 +10,11 @@ public interface TokenService {
 
   TokenUserInfoDTO verify(String rawSessionToken) throws RuntimeException;
 
-  Set<String> readAllOfUser(long userid) throws SQLException;
+  Set<String> readAllOfUser(Long userid) throws SQLException;
 
-  void addToUser(long userid, String rawSessionToken) throws SQLException;
+  void addToUser(Long userid, String rawSessionToken) throws SQLException;
 
-  void removeFromUser(long userid, String rawSessionToken) throws SQLException;
+  void removeFromUser(Long userid, String rawSessionToken) throws SQLException;
 
-  void removeAllFromUser(long userid) throws SQLException;
+  void removeAllFromUser(Long userid) throws SQLException;
 }

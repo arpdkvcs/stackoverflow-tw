@@ -7,10 +7,11 @@ import java.util.Set;
 
 public interface AccessControlService {
 
-  Set<Role> readAllOfUser(long userid) throws SQLException;
-  void assignToUser(long userid, Role role) throws SQLException;
+  Set<Role> readAllOfUser(Long userid) throws SQLException;
 
-  void removeFromUser(long userid, Role role) throws SQLException;
+  void assignToUser(Long userid, Role role) throws SQLException;
 
-  boolean verifyRoleOfUser(long userid, Role role) throws SQLException;
+  void removeFromUser(Long userid, Role role) throws SQLException;
+
+  boolean verifyRoleOfUser(Long userid, Role role) throws SQLException;
 }

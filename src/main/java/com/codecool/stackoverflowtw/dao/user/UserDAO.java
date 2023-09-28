@@ -13,15 +13,15 @@ public interface UserDAO {
   Optional<UserModel> readByUsername(String username) throws SQLException,
     CannotGetJdbcConnectionException;
 
-  Optional<UserModel> readById(long id) throws SQLException, CannotGetJdbcConnectionException;
+  Optional<UserModel> readById(Long id) throws SQLException, CannotGetJdbcConnectionException;
 
   void create(String username, String hashedPassword)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void update(long id, String username, String hashedPassword)
+  void update(Long id, String username, String hashedPassword)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void delete(long id) throws SQLException, CannotGetJdbcConnectionException;
+  void delete(Long id) throws SQLException, CannotGetJdbcConnectionException;
 
-  String getUsernameById(long userId) throws SQLException;
+  String getUsernameById(Long userId) throws SQLException;
 }

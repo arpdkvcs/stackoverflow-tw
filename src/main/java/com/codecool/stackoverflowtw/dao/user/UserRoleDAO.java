@@ -8,13 +8,14 @@ import java.util.Set;
 
 public interface UserRoleDAO {
 
-  Set<Role> readAllOfUser(long userid) throws SQLException;
+  Set<Role> readAllOfUser(Long userid) throws SQLException;
+
   void assignToUser(long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  void removeFromUser(long userid, Role role)
+  void removeFromUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException;
 
-  boolean verifyRoleOfUser(long userid, Role role)
+  boolean verifyRoleOfUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException;
 }

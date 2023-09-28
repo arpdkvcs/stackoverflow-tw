@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import publicFetch from "../utility/publicFetch";
 import QuestionTable from "../components/QuestionTable";
 
@@ -39,7 +39,6 @@ function QuestionsList() {
         <QuestionTable question={filteredQuestions}/>
       </div>
   )
-
 }
 
 export default QuestionsList;

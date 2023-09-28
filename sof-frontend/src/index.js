@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
 import "./style/index.css";
 import {AuthProvider} from "./context/AuthProvider";
@@ -21,16 +21,16 @@ const router = createBrowserRouter([
   /* public */
   {
     path: "/",
-    element: <Layout />,
-    errorElement: <ErrorPage />,
+    element: <Layout/>,
+    errorElement: <ErrorPage/>,
     children: [
       {
         path: "/",
-        element: <Home />
+        element: <Home/>
       },
       {
         path: "/questions",
-        element: <QuestionsList />
+        element: <QuestionsList/>
       },
       {
         path: "/questiondetails/:id",
@@ -41,23 +41,23 @@ const router = createBrowserRouter([
         element:<UserSignIn/>
       },
       {
-        path:"/register",
-        element:<UserSignUp/>
+        path: "/register",
+        element: <UserSignUp/>
       }
     ]
   },
   /* restricted to users */
   {
     path: "/user",
-    element: <RequireAuth allowedRoles={["User"]} />,
-    errorElement: <ErrorPage />,
+    element: <RequireAuth allowedRoles={["User"]}/>,
+    errorElement: <ErrorPage/>,
     children: [
       {
-        element: <Layout />,
+        element: <Layout/>,
         children: [
           {
             path: "",
-            element: <UserHome />
+            element: <UserHome/>
           }
         ]
       }
@@ -66,15 +66,15 @@ const router = createBrowserRouter([
   /* restricted to users */
   {
     path: "/admin",
-    element: <RequireAuth allowedRoles={["User"]} />,
-    errorElement: <ErrorPage />,
+    element: <RequireAuth allowedRoles={["User"]}/>,
+    errorElement: <ErrorPage/>,
     children: [
       {
-        element: <Layout />,
+        element: <Layout/>,
         children: [
           {
             path: "",
-            element: <AdminHome />
+            element: <AdminHome/>
           }
         ]
       }
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/*",
-    element: <NotFound />
+    element: <NotFound/>
   }
 ]);
 
@@ -90,6 +90,6 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <AuthProvider>
-    <RouterProvider router={router} />
+    <RouterProvider router={router}/>
   </AuthProvider>
 );

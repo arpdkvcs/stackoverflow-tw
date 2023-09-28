@@ -10,8 +10,12 @@ import java.util.Set;
 
 public interface UserService {
   Set<UserResponseDTO> readAll() throws SQLException;
+
   Optional<UserResponseDetailsDTO> readByUsername(String username) throws SQLException;
-  Optional<UserResponseDetailsDTO> readById(long id) throws SQLException;
+
+  Optional<UserResponseDetailsDTO> readById(Long id) throws SQLException;
+
   void update(UpdateUserDTO user) throws SQLException;
-  void delete(long id) throws SQLException;
+
+  void delete(Long id) throws SQLException;
 }

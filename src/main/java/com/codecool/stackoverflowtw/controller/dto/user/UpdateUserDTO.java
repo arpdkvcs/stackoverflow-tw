@@ -1,4 +1,4 @@
 package com.codecool.stackoverflowtw.controller.dto.user;
 
-public record UpdateUserDTO(long id, String username, String rawPassword) {
+public record UpdateUserDTO(Long id, String username, String rawPassword) {
 }
