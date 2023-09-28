@@ -6,11 +6,8 @@ import com.codecool.stackoverflowtw.service.question.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -38,7 +35,7 @@ public class QuestionController extends ControllerBase {
   @GetMapping("/{id}")
   public ResponseEntity<?> getQuestionById(@PathVariable Long id) {
     try {
-      return handleOkData("Successful request", questionService.getQuestionById(id));
+      return handleOkData("Successful request", questionService.getQuestionByIdWithAnswers(id));
     } catch (Exception e) {
       return handleBadRequest("Failed to retrieve question.", e);
     }

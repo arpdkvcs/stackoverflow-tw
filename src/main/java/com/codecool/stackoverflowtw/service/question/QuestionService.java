@@ -1,10 +1,9 @@
 package com.codecool.stackoverflowtw.service.question;
 
-import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
-import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDTO;
-import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
-import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.answer.AnswerResponseDetailsDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.*;
 import com.codecool.stackoverflowtw.dao.answer.AnswerDAO;
+import com.codecool.stackoverflowtw.dao.model.AnswerModel;
 import com.codecool.stackoverflowtw.dao.model.QuestionModel;
 import com.codecool.stackoverflowtw.dao.question.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
@@ -66,6 +65,40 @@ public class QuestionService {
     } catch (CannotGetJdbcConnectionException e) {
       throw new SQLException(e);
     }
+  }
+
+  public QuestionResponseDetailsWithAnswersDTO getQuestionByIdWithAnswers(long questionId) throws SQLException {
+
+    try {
+      QuestionModel questionModel = questionsDAO.readById(questionId);
+
+      long id = questionModel.getId();
+      String title = questionModel.getTitle();
+      String content = questionModel.getContent();
+      LocalDateTime createdAt = questionModel.getCreatedAt();
+      Set<AnswerModel> answerModels = answerDAO.getAnswersByQuestionId(questionId);
+      Set<AnswerResponseDetailsDTO> answers = convertAnswerModelsToDTOs(answerModels);
+      String username = userDAO.getUsernameById(questionModel.getUserId());
+
+      return new QuestionResponseDetailsWithAnswersDTO(id, title, content, createdAt, answers, username);
+
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
+    }
+  }
+
+  private Set<AnswerResponseDetailsDTO> convertAnswerModelsToDTOs(Set<AnswerModel> answerModels) throws SQLException {
+    Set<AnswerResponseDetailsDTO> answers = new HashSet<>();
+
+    for (AnswerModel answerModel : answerModels) {
+      answers.add(new AnswerResponseDetailsDTO(
+              answerModel.getId(),
+              answerModel.getContent(),
+              answerModel.getCreatedAt(),
+              userDAO.getUsernameById(answerModel.getUserId())
+      ));
+    }
+    return answers;
   }
 
   public Set<QuestionResponseDTO> getQuestionsByTitle(String searchQuery) throws SQLException {
