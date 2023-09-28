@@ -10,6 +10,9 @@ function Layout() {
           <Link to="/">
             <button>Home</button>
           </Link>
+          <Link to="/questions">
+            <button>Question</button>
+          </Link>
         </nav>
       </header>
       <main>

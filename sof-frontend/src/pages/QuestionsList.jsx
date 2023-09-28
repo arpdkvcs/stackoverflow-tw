@@ -26,11 +26,11 @@ function QuestionsList() {
     <div>
       {error && <p>Error: {error}</p>}
       <ul>
-        {questions.map((question) => (
+        {questions?.length ? questions.map((question) => (
           <li key={question.id}>
             Title: {question.title} --- Content: {question.content}
           </li>
-        ))}
+        )):<h1>iz der eny kvescsön</h1>}
       </ul>
     </div>
   );
