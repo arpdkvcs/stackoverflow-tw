@@ -1,17 +1,78 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import "./style/index.css";
+import AuthProvider from "./context/AuthProvider";
+import RequireAuth from "./components/RequireAuth";
+import Layout from "./pages/Layout";
+import ErrorPage from "./pages/ErrorPage";
+import Home from "./pages/Home";
+import UserHome from "./pages/user/UserHome";
+import AdminHome from "./pages/admin/AdminHome";
+import NotFound from "./pages/NotFound";
+
+const router = createBrowserRouter([
+  /* public */
+  {
+    path: "/",
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "/questions",
+        element: <Home />
+      }
+    ]
+  },
+  /* restricted to users */
+  {
+    path: "/user",
+    element: <RequireAuth allowedRoles={["User"]} />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <Layout />,
+        children: [
+          {
+            path: "/",
+            element: <UserHome />
+          }
+        ]
+      }
+    ]
+  },
+  /* restricted to users */
+  {
+    path: "/admin",
+    element: <RequireAuth allowedRoles={["User"]} />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <Layout />,
+        children: [
+          {
+            path: "/",
+            element: <AdminHome />
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: "/*",
+    element: <NotFound />
+  }
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <AuthProvider>
+    <RouterProvider router={router} />
+  </AuthProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
