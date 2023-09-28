@@ -12,15 +12,16 @@ function QuestionsList() {
     const fetchQuestions = async () => {
       try {
         //example of using the public endpoint fetch function
-        const responseObject = await publicFetch("/questions/all");
+        const responseObject = await publicFetch("questions/all");
         if (!responseObject?.data) {
           throw new Error(responseObject?.error ?? "Failed to load questions");
         }
         const data = responseObject.data;
+        console.log(data);
         setQuestions(data);
         setFilteredQuestions(data);
       } catch (error) {
-        setError(error.message);
+        setError(error?.message??"Failed to load questions");
       }
     };
     fetchQuestions();
@@ -35,8 +36,10 @@ function QuestionsList() {
 
   return (
       <div>
-        Search: <input type="text" onChange={(e) => handleSearch(e)} value={search}></input>
-        <QuestionTable question={filteredQuestions}/>
+        Search: <input type="search" onChange={(e) => {
+        handleSearch(e);
+      }} value={search}></input>
+        {questions?.length&&<QuestionTable questions={questions}/>}
       </div>
   )
 }
