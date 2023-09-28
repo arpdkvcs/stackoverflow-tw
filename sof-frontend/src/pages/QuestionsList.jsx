@@ -4,6 +4,8 @@ import publicFetch from "../utility/publicFetch";
 function QuestionsList() {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -15,6 +17,7 @@ function QuestionsList() {
         }
         const data = responseObject.data;
         setQuestions(data);
+        setFilteredQuestions(data);
       } catch (error) {
         setError(error.message);
       }
@@ -22,9 +25,17 @@ function QuestionsList() {
     fetchQuestions();
   }, []);
 
+  function handleSearch(e) {
+    setSearch(e.target.value);
+    const allQuestions = [...questions];
+    const filteredQuestions = allQuestions.filter(question => question.title.includes(e.target.value));
+    setFilteredQuestions(filteredQuestions);
+  }
+
   return (
     <div>
       {error && <p>Error: {error}</p>}
+      Search: <input type=search onChange={handleSearch}></input>
       <h2>Browse questions</h2>
       <table>
         <tr>
@@ -32,7 +43,7 @@ function QuestionsList() {
           <th>Date</th>
           <th>Asked by</th>
         </tr>
-        {questions?.length ? questions.map( (question) => (
+        {filteredQuestions?.length ? filteredQuestions.map( (question) => (
           <tr key={question.id}>
             <td>{question.title}</td>
             <td>{question.createdAt}</td>
