@@ -59,10 +59,23 @@ public class QuestionController extends BaseController {
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> addNewQuestion(@RequestBody NewQuestionDTO question) {
+  public ResponseEntity<?> addNewQuestion(
+          HttpServletRequest request, @RequestBody Map<String, Object> body) {
     try {
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.addNewQuestion(question)));
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+
+      if (userInfo.isPresent()) {
+        NewQuestionDTO question = new NewQuestionDTO(
+                userInfo.get().userid(),
+                body.get("title").toString(),
+                body.get("content").toString()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+                "data", questionService.addNewQuestion(question)));
+      } else {
+        return handleUnauthorized("Unauthorized", null);
+      }
+
     } catch (Exception e) {
       return handleBadRequest("Failed to post new question.", e);
     }
