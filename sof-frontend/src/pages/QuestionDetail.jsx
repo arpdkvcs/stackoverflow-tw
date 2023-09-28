@@ -2,11 +2,14 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import publicFetch from "../utility/publicFetch";
+import useAuth from "../utility/useAuth";
 
 
 export default function QuestionDetail() {
   const {id} = useParams();
   const [question, setQuestion] = useState(null);
+
+  const {auth} = useAuth();
 
   useEffect(() => {
     console.log(id);
@@ -40,9 +43,9 @@ export default function QuestionDetail() {
             {question.answers.map(answer => <li key={answer.id}>{answer.content}</li>)}
           </ul>
         </div> : <h3>No answers yet!</h3>}
-        <Link to={`/user/questions/addanswer/${question.id}`}>
+        {auth?.userid?<Link to={`/user/questions/addanswer/${question.id}`}>
           <button>Add answer</button>
-        </Link>
+        </Link>:<></>}
       </div>
     );
   } else {
