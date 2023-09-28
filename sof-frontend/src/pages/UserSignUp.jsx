@@ -1,38 +1,32 @@
-import {useState} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./UserSignUp.css";
 
-function UserSignUp({onSignUpComplete, onBackToLogin}) {
-  const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
+import publicFetch from "../utility/publicFetch";
+
+function UserSignUp() {
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-  const [registeredUsername, setRegisteredUsername] = useState("");
 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
-    const data = {name, userName, password};
+    const data = { "username": username, "password": password };
     try {
-      const response = await fetch("/apiURL" /*input our URL*/, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-      const jsonResponse = await response.json();
-      console.log(jsonResponse);
-      setName("");
+      const jsonResponse = await publicFetch("/auth/register", "POST", data);
       setUserName("");
       setPassword("");
-
-      if (jsonResponse.success) {
+      if (jsonResponse.message) {
         setRegistrationSuccess(true);
-        setRegisteredUsername(jsonResponse.username);
+      } else {
+        setRegistrationSuccess(false);
+        window.alert(`Registration failed`);
       }
     } catch (error) {
+      setRegistrationSuccess(false);
       console.error(error);
     }
   };
@@ -41,7 +35,6 @@ function UserSignUp({onSignUpComplete, onBackToLogin}) {
     setShowPassword(!showPassword);
   };
 
-
   return (
     <div className="form-container" id="signup">
       <h3>Create your account here!</h3>
@@ -49,13 +42,13 @@ function UserSignUp({onSignUpComplete, onBackToLogin}) {
         <>
           <form onSubmit={handleSignUpSubmit}>
             <label>
-              Name:
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
-            </label>
-            <label>
               User Name:
-              <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)}
-                     required/>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+              />
             </label>
             <label>
               Password:
@@ -64,19 +57,26 @@ function UserSignUp({onSignUpComplete, onBackToLogin}) {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required/>
+                  required
+                />
                 <FontAwesomeIcon
                   icon={showPassword ? faEye : faEyeSlash}
                   className="password-toggle-icon"
-                  onClick={handleTogglePasswordVisibility}/>
+                  onClick={handleTogglePasswordVisibility}
+                />
               </div>
             </label>
-            <button id="submitcomplete" type="submit">Complete sign up</button>
+            <button id="submitcomplete" type="submit">
+              Complete sign up
+            </button>
           </form>
         </>
       ) : (
         <div>
-          <p>Thank you for registering, {registeredUsername}! Have fun!</p>
+          <p>Thank you for registering! Have fun!</p>
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
         </div>
       )}
     </div>

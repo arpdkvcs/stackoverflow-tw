@@ -1,4 +1,4 @@
-export default async function fetchPublic(path, method = "GET", bodyObject = null) {
+export default async function publicFetch(path, method = "GET", bodyObject = null) {
   try {
     const apiUrl = process.env.REACT_APP_API_URL;
 

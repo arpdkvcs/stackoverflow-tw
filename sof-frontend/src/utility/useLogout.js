@@ -11,7 +11,7 @@ function useLogout() {
   const logout = useCallback(
     async (willfulLogout = false) => {
       try {
-        const apiUrl = process.env.REACT_APP_API_PRIV_URL;
+        const apiUrl = process.env.REACT_APP_API_URL;
         const path = "auth/logout";
         await fetch(`${apiUrl}/${path}`, {
           method: "POST",

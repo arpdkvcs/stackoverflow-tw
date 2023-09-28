@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
 import {useEffect, useState} from "react";
+import publicFetch from "../utility/publicFetch";
 
-function fetchQuestion(questionId) {
-    return fetch(`/endpoint/questiondetails/${questionId}`).then((res) => res.json());
-}
 
-function fetchAnswer(answerId) {
-    return fetch(`/endpoint/questiondetails/${answerId}`).then((res) => res.json());
-}
+
 
 export default function QuestionDetail() {
     let { questionId } = useParams();
@@ -16,15 +12,19 @@ export default function QuestionDetail() {
     const [answers, setAnswers] = useState([]);
 
     useEffect(() => {
-        fetchQuestion(questionId).then((q) => setQuestion(q));
-    }, [questionId]);
-
-    useEffect(() => {
-        const answers = [];
-        question.answersIds.forEach(answerId => {
-            const answer = fetchAnswer(answerId);
-            answers.push(answer);
-        })
+      async function fetchQuestionDetails() {
+        try {
+          const responseObject = await publicFetch(`questions/${questionId}`);
+          if (!responseObject?.data){
+            throw new Error(responseObject?.error??"Failed to load all questions");
+          }
+          setQuestion(responseObject.data);
+        } catch (e){
+          setQuestion(null);
+          console.error(e);
+        }
+      }
+      fetchQuestionDetails();
     }, [question]);
 
     if (question) {

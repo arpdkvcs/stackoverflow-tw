@@ -5,7 +5,7 @@ import useLogout from "./auth/useLogout";
 function UseAuthFetch() {
   const {auth} = useAuth();
   const logout = useLogout();
-  const apiUrl = process.env.REACT_APP_API_PRIV_URL;
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const fetchWitAuth = useCallback(
     async (path, method, body) => {
