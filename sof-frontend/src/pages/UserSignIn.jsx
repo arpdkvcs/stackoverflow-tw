@@ -20,7 +20,7 @@ function UserSignIn() {
       if (!responseObject?.data) {
         throw new Error(responseObject?.error ?? "Login failed");
       } else {
-        handleSuccessfulLogin(responseObject.data.username, responseObject.data.roles);
+        handleSuccessfulLogin(responseObject.data.userid,responseObject.data.username, responseObject.data.roles);
       }
       resetForm();
     } catch (error) {
@@ -32,9 +32,8 @@ function UserSignIn() {
     }
   };
 
-  function handleSuccessfulLogin(receivedUsername, receivedRoles) {
-    debugger;
-    setAuth({ "username": receivedUsername, "roles": receivedRoles });
+  function handleSuccessfulLogin(receivedUserid,receivedUsername, receivedRoles) {
+    setAuth({"userid":receivedUserid, "username": receivedUsername, "roles": receivedRoles });
     navigate("/user");
   }
 
