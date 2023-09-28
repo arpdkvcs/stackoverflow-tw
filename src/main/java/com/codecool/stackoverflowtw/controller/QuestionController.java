@@ -29,8 +29,7 @@ public class QuestionController extends ControllerBase {
   @GetMapping("/all")
   public ResponseEntity<?> getAllQuestions() {
     try {
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.getAllQuestions()));
+      return handleOkData("Successful request", questionService.getAllQuestions());
     } catch (Exception e) {
       return handleBadRequest("Failed to retrieve questions.", e);
     }
@@ -39,8 +38,7 @@ public class QuestionController extends ControllerBase {
   @GetMapping("/{id}")
   public ResponseEntity<?> getQuestionById(@PathVariable Long id) {
     try {
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.getQuestionById(id)));
+      return handleOkData("Successful request", questionService.getQuestionById(id));
     } catch (Exception e) {
       return handleBadRequest("Failed to retrieve question.", e);
     }
@@ -49,8 +47,7 @@ public class QuestionController extends ControllerBase {
   @GetMapping("/search/{searchQuery}")
   public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
     try {
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.getQuestionsByTitle(searchQuery)));
+      return handleOkData("Successful request", questionService.getQuestionsByTitle(searchQuery));
     } catch (Exception e) {
       return handleBadRequest("Failed to perform search.", e);
     }
@@ -77,8 +74,7 @@ public class QuestionController extends ControllerBase {
 
        */
 
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.addNewQuestion(newQuestionDTO)));
+      return handleOkData("Successful request", questionService.addNewQuestion(newQuestionDTO));
 
     } catch (Exception e) {
       return handleBadRequest("Failed to post new question.", e);
@@ -106,8 +102,7 @@ public class QuestionController extends ControllerBase {
 
        */
 
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "data", questionService.updateQuestion(updateQuestionDTO)));
+      return handleOkData("Successful request", questionService.updateQuestion(updateQuestionDTO));
 
     } catch (Exception e) {
       return handleBadRequest("Failed to update question.", e);
@@ -118,8 +113,7 @@ public class QuestionController extends ControllerBase {
   public ResponseEntity<?> deleteQuestionById(@PathVariable Long id) {
     try {
       questionService.deleteQuestionById(id);
-      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-        "message", "Question has been deleted."));
+      return handleOkMessage("Question has been deleted.");
     } catch (Exception e) {
       return handleBadRequest("Failed to delete question.", e);
     }
