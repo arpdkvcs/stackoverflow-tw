@@ -39,7 +39,7 @@ export default function AddQuestion() {
         <label htmlFor={"title"}>Title:</label>
         <input type={"text"} id={"title"} name={"title"} minLength={1} maxLength={100} required={true}></input>
         <label htmlFor={"content"}>Content:</label>
-        <textarea id={"content"} name={"content"} minLength={1} maxLength={100}
+        <textarea cols={40} rows={10}  id={"content"} name={"content"} minLength={1} maxLength={100}
                   required={true}></textarea>
         <button type={"submit"}>Add</button>
       </form>

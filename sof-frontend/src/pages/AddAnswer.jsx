@@ -44,7 +44,7 @@ export default function AddAnswer() {
     <div>
       <form onSubmit={handleAddAnswer}>
         <label htmlFor={"content"}>Content:</label>
-        <textarea id={"content"} name={"content"} minLength={1} maxLength={100} required={true}></textarea>
+        <textarea cols={40} rows={10}  id={"content"} name={"content"} minLength={1} maxLength={100} required={true}></textarea>
         <button type={"submit"}>Add</button>
       </form>
     </div>
