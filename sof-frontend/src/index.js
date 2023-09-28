@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./style/index.css";
 import {AuthProvider} from "./context/AuthProvider";
-import RequireAuth from "./components/RequireAuth";
+import RequireAuth from "./pages/RequireAuth";
 import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
@@ -13,6 +13,8 @@ import QuestionsList from "./pages/QuestionsList";
 import UserHome from "./pages/user/UserHome";
 import AdminHome from "./pages/admin/AdminHome";
 import NotFound from "./pages/NotFound";
+import UserSignIn from "./pages/UserSignIn";
+import UserSignUp from "./pages/UserSignUp";
 
 const router = createBrowserRouter([
   /* public */
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "/questions",
         element: <QuestionsList />
+      },
+      {
+        path:"/login",
+        element:<UserSignIn/>
+      },
+      {
+        path:"/register",
+        element:<UserSignUp/>
       }
     ]
   },
