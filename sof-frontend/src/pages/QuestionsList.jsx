@@ -11,12 +11,12 @@ function QuestionsList() {
         //example of using the public endpoint fetch function
         const responseObject = await publicFetch("/questions/all");
         if (responseObject?.error || !responseObject?.data) {
-          throw new Error(responseObject.error ?? "Failed to load questions");
+          throw new Error(responseObject?.error ?? "Failed to load questions");
         }
         const data = responseObject.data;
         setQuestions(data);
       } catch (error) {
-        setError(error.message);
+        setError(error?.message);
       }
     };
     fetchQuestions();
@@ -26,11 +26,15 @@ function QuestionsList() {
     <div>
       {error && <p>Error: {error}</p>}
       <ul>
-        {questions?.length ? questions.map((question) => (
-          <li key={question.id}>
-            Title: {question.title} --- Content: {question.content}
-          </li>
-        )):<h1>iz der eny kvescsön</h1>}
+        {questions?.length ? (
+          questions.map((question) => (
+            <li key={question.id}>
+              Title: {question.title} --- Content: {question.content}
+            </li>
+          ))
+        ) : (
+          <h1>iz der eny kvescsön</h1>
+        )}
       </ul>
     </div>
   );

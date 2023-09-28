@@ -2,36 +2,41 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./UserSignIn.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import publicFetch from "../utility/publicFetch";
+import useAuth from "../utility/useAuth";
 
 function UserSignIn() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const { setAuth } = useAuth();
 
   const handleSignInSubmit = async (user) => {
+    debugger;
     try {
-      const response = await fetch(
-        "/actualURL",
-        /*input our endpointURL that handles signing in*/ {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user)
-        }
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message);
+      const responseObject = await publicFetch("auth/login", "POST", user);
+      if (!responseObject?.data) {
+        throw new Error(responseObject?.error ?? "Login failed");
+      } else {
+        handleSuccessfulLogin(responseObject.data.username, responseObject.data.roles);
       }
-      console.log(data);
       resetForm();
     } catch (error) {
+      setAuth({});
       alert(
-        "An error occurred while signing in! Please check your username and password, then try again!"
+        "Failed to sign in. Please check your username and password, then try again!"
       );
       console.error("An error occurred while signing in:", error);
     }
   };
+
+  function handleSuccessfulLogin(receivedUsername, receivedRoles) {
+    setAuth({ "username": receivedUsername, "roles": receivedRoles });
+    navigate(-1);
+  }
 
   const resetForm = () => {
     setUserName("");
@@ -41,8 +46,8 @@ function UserSignIn() {
   const onSubmit = (e) => {
     e.preventDefault();
     handleSignInSubmit({
-      userName,
-      password
+      "username": userName,
+      "password": password
     });
   };
 

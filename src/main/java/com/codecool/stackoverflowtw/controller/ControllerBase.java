@@ -69,16 +69,8 @@ public abstract class ControllerBase {
   }
 
   protected void removeSessionCookie(HttpServletResponse response) {
-    Cookie cookie = new Cookie("jwt", null);
-    cookie.setHttpOnly(true);
-    cookie.setSecure(true);
-    cookie.setPath("/");
-    cookie.setMaxAge(0);
-    String cookieHeader = String.format(
-      "%s; SameSite=None",
-      cookie.toString()
-    );
-    response.addHeader("Set-Cookie", cookieHeader);
+    String cookieValue = "jwt=''; Path=/; HttpOnly; Secure; SameSite=Secure; Max-Age=0";
+    response.addHeader("Set-Cookie", cookieValue);
   }
 
   //verifies the token and returns the userinfo if valid

@@ -45,14 +45,14 @@ public class AuthenticationController extends ControllerBase {
     }
   }
 
-  @PostMapping("/login")
+  @PostMapping("login")
   public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUserDTO,
                                  HttpServletResponse response) {
     try {
       LoginResponseDTO loginResponse = authenticationService.login(loginUserDTO);
 
       String cookieValue = String.format(
-        "jwt=%s; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=%d",
+        "jwt=%s; Path=/; HttpOnly; Secure; SameSite=Secure; Max-Age=%d",
         loginResponse.sessionToken(),
         sessionTokenExpiration
       );
