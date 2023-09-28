@@ -1,27 +1,30 @@
 import {useEffect, useState} from "react";
-import publicFetch from "../utility/publicFetch";
-import QuestionTable from "../components/QuestionTable";
+import QuestionTable from "../../components/QuestionTable";
+import useAuthFetch from "../../utility/useAuthFetch";
 
-function QuestionsList() {
+function UserPage() {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [search, setSearch] = useState("");
 
+  const fetchWithAuth = useAuthFetch();
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        //example of using the public endpoint fetch function
-        const responseObject = await publicFetch("questions/all");
+        const responseObject = await fetchWithAuth("questions/all");
+
         if (!responseObject?.data) {
           throw new Error(responseObject?.error ?? "Failed to load questions");
         }
+
         const data = responseObject.data;
         console.log(data);
         setQuestions(data);
         setFilteredQuestions(data);
       } catch (error) {
-        setError(error?.message??"Failed to load questions");
+        setError(error?.message ?? "Failed to load questions");
       }
     };
     fetchQuestions();
@@ -35,13 +38,13 @@ function QuestionsList() {
   }
 
   return (
-      <div>
-        Search: <input type="search" onChange={(e) => {
-        handleSearch(e);
-      }} value={search}></input>
-        {questions?.length&&<QuestionTable questions={filteredQuestions} questionDetailsPath="questions"/>}
-      </div>
-  )
+    <div>
+      Search: <input type="search" onChange={(e) => {
+      handleSearch(e);
+    }} value={search}></input>
+      {questions?.length && <QuestionTable questions={filteredQuestions} questionDetailsPath="user/questions"/>}
+    </div>
+  );
 }
 
-export default QuestionsList;
+export default UserPage;

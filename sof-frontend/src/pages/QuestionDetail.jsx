@@ -45,7 +45,7 @@ export default function QuestionDetail() {
   } else {
     return (
       <div>
-        Waiting for question.
+        Loading...
       </div>
     );
   }

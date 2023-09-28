@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-export default function QuestionTable({ questions }) {
+export default function QuestionTable({ questions,questionDetailsPath }) {
     return(
         <div>
         <h2>Browse questions</h2>
@@ -19,12 +19,11 @@ export default function QuestionTable({ questions }) {
                 <td>{question.title}</td>
                 <td>{question.createdAt}</td>
                 <td>{question.username}</td>
-                <td><Link to={`/questiondetails/${question.id}`}>
+                <td><Link to={`/${questionDetailsPath}/${question.id}`}>
                   <button>Details</button>
                 </Link></td>
               </tr>);
-
-            }):<tr><td><h1>No questions found</h1></td></tr>}
+            }):<tr><td><h3>No questions found</h3></td></tr>}
           </tbody>
         </table>
     </div>

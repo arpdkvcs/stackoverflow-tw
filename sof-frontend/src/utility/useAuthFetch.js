@@ -1,6 +1,6 @@
 import {useCallback} from "react";
-import useAuth from "./auth/useAuth";
-import useLogout from "./auth/useLogout";
+import useAuth from "./useAuth";
+import useLogout from "./useLogout";
 
 function UseAuthFetch() {
   const {auth} = useAuth();
@@ -8,7 +8,7 @@ function UseAuthFetch() {
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const fetchWitAuth = useCallback(
-    async (path, method, body) => {
+    async (path, method="GET", body=null) => {
       try {
         const url = `${apiUrl}/${path}`;
 

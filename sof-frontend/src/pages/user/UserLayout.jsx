@@ -1,22 +1,23 @@
 import React from "react";
 import {Link, Outlet} from "react-router-dom";
+import UserLogout from "./UserLogout";
+import useAuth from "../../utility/useAuth";
 
 //nav could be exported to refactor
-function Layout() {
+function UserLayout() {
+  const {auth} = useAuth();
 
   return (
     <div className="Layout">
       <header>
+        {auth?.username && <h3>Welcome {auth.username}!</h3>}
         <nav>
-          <Link to="/">
+          <Link to="/user">
             <button>Questions</button>
           </Link>
-          <Link to="/register">
-            <button>Register</button>
-          </Link>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
+          {auth?.username && (
+            <UserLogout/>
+          )}
         </nav>
       </header>
       <main>
@@ -26,4 +27,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default UserLayout;

@@ -7,15 +7,15 @@ import {AuthProvider} from "./context/AuthProvider";
 import RequireAuth from "./pages/RequireAuth";
 import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
-import Home from "./pages/Home";
 import QuestionsList from "./pages/QuestionsList";
 
-import UserHome from "./pages/user/UserHome";
-import AdminHome from "./pages/admin/AdminHome";
+import UserPage from "./pages/user/UserPage";
+import AdminPage from "./pages/admin/AdminPage";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
 import UserSignUp from "./pages/UserSignUp";
 import QuestionDetail from "./pages/QuestionDetail";
+import UserLayout from "./pages/user/UserLayout";
 
 const router = createBrowserRouter([
   /* public */
@@ -26,14 +26,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home/>
-      },
-      {
-        path: "/questions",
         element: <QuestionsList/>
       },
       {
-        path: "/questiondetails/:id",
+        path: "/questions/:id",
         element: <QuestionDetail />
       },
       {
@@ -49,21 +45,21 @@ const router = createBrowserRouter([
   /* restricted to users */
   {
     path: "/user",
-    element: <RequireAuth allowedRoles={["User"]}/>,
+    element: <RequireAuth allowedRoles={["USER"]}/>,
     errorElement: <ErrorPage/>,
     children: [
       {
-        element: <Layout/>,
+        element: <UserLayout/>,
         children: [
           {
             path: "",
-            element: <UserHome/>
+            element: <UserPage/>
           }
         ]
       }
     ]
   },
-  /* restricted to users */
+  /* restricted to admins */
   {
     path: "/admin",
     element: <RequireAuth allowedRoles={["User"]}/>,
@@ -74,7 +70,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <AdminHome/>
+            element: <AdminPage/>
           }
         ]
       }

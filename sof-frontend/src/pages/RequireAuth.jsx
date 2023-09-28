@@ -9,6 +9,7 @@ function RequireAuth({allowedRoles}) {
 
   //real authentication happens at the backend
   //unauthorized response triggers logout
+  debugger;
   const hasAuthState = auth?.username && auth?.roles;
 
   if (hasAuthState && auth.roles?.find((role) => allowedRoles.includes(role))) {

@@ -33,8 +33,9 @@ function UserSignIn() {
   };
 
   function handleSuccessfulLogin(receivedUsername, receivedRoles) {
+    debugger;
     setAuth({ "username": receivedUsername, "roles": receivedRoles });
-    navigate("/");
+    navigate("/user");
   }
 
   const resetForm = () => {
