@@ -9,7 +9,6 @@ import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import QuestionsList from "./pages/QuestionsList";
 
-import UserQuestions from "./pages/user/UserQuestions";
 import AdminPage from "./pages/admin/AdminPage";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
@@ -55,14 +54,14 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <UserQuestions/>
+            element: <QuestionsList/>
           },
           {
             path: "/user/questions/:id",
             element: <UserQuestionDetail/>
           },
           {
-            path: "/user/questions/:id/addanswer",
+            path: "/user/questions/addanswer/:id",
             element: <AddAnswer/>
           }
         ]
