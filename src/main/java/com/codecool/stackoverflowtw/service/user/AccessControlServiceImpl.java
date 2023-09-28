@@ -1,7 +1,7 @@
 package com.codecool.stackoverflowtw.service.user;
 
-import com.codecool.stackoverflowtw.dao.user.UserRoleDAO;
 import com.codecool.stackoverflowtw.dao.model.Role;
+import com.codecool.stackoverflowtw.dao.user.UserRoleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS questions_tags;
 DROP TABLE IF EXISTS tags;
-ALTER TABLE IF EXISTS questions DROP CONSTRAINT IF EXISTS questions_accepted_answer_id_fkey;
+ALTER TABLE IF EXISTS questions
+    DROP CONSTRAINT IF EXISTS questions_accepted_answer_id_fkey;
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS user_sessions;
@@ -21,8 +22,10 @@ CREATE TABLE roles
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
-INSERT INTO roles (name) VALUES ('USER');
-INSERT INTO roles (name) VALUES ('ADMIN');
+INSERT INTO roles (name)
+VALUES ('USER');
+INSERT INTO roles (name)
+VALUES ('ADMIN');
 
 CREATE TABLE user_roles
 (

@@ -1,15 +1,15 @@
-package com.codecool.stackoverflowtw.dao.user.model;
+package com.codecool.stackoverflowtw.dao.model;
 
 import java.util.Set;
 
-public class User {
+public class UserModel {
   private final Long id;
-  private String username;
-  private String hashedPassword;
   private final Set<Role> roles;
   private final Set<String> hashedSessionTokens;
+  private String username;
+  private String hashedPassword;
 
-  public User(Long id, String username, String hashedPassword, Set<Role> roles, Set<String> hashedSessionTokens) {
+  public UserModel(Long id, String username, String hashedPassword, Set<Role> roles, Set<String> hashedSessionTokens) {
     this.id = id;
     this.username = username;
     this.hashedPassword = hashedPassword;

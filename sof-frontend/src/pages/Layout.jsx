@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 
 //nav could be exported to refactor
 function Layout() {
@@ -16,7 +16,7 @@ function Layout() {
         </nav>
       </header>
       <main>
-        <Outlet className="Outlet" />
+        <Outlet className="Outlet"/>
       </main>
     </div>
   );

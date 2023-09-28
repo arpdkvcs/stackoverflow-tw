@@ -1,9 +1,9 @@
 package com.codecool.stackoverflowtw.service.user;
 
 import com.codecool.stackoverflowtw.controller.dto.user.*;
+import com.codecool.stackoverflowtw.dao.model.Role;
 import com.codecool.stackoverflowtw.dao.model.UserModel;
 import com.codecool.stackoverflowtw.dao.user.UserDAO;
-import com.codecool.stackoverflowtw.dao.model.Role;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

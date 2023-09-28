@@ -2,7 +2,6 @@ package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
-import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
 import com.codecool.stackoverflowtw.service.question.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -60,7 +58,7 @@ public class QuestionController extends ControllerBase {
 
   @PostMapping("")
   public ResponseEntity<?> addNewQuestion(
-          HttpServletRequest request, @RequestBody NewQuestionDTO newQuestionDTO) {
+    HttpServletRequest request, @RequestBody NewQuestionDTO newQuestionDTO) {
     try {
       /*
       Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
@@ -80,7 +78,7 @@ public class QuestionController extends ControllerBase {
        */
 
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-              "data", questionService.addNewQuestion(newQuestionDTO)));
+        "data", questionService.addNewQuestion(newQuestionDTO)));
 
     } catch (Exception e) {
       return handleBadRequest("Failed to post new question.", e);
@@ -109,7 +107,7 @@ public class QuestionController extends ControllerBase {
        */
 
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-              "data", questionService.updateQuestion(updateQuestionDTO)));
+        "data", questionService.updateQuestion(updateQuestionDTO)));
 
     } catch (Exception e) {
       return handleBadRequest("Failed to update question.", e);

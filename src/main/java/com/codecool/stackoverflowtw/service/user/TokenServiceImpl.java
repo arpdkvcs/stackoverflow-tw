@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
-import com.codecool.stackoverflowtw.dao.user.UserSessionDAO;
 import com.codecool.stackoverflowtw.dao.model.Role;
+import com.codecool.stackoverflowtw.dao.user.UserSessionDAO;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

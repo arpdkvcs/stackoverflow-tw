@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
 
 
   private Optional<UserResponseDetailsDTO> getUserResponseDetailsDTO(Optional<UserModel> userModel) {
-      return userModel.map(user -> new UserResponseDetailsDTO(user.getId(),
-              user.getUsername(), user.getRoles()));
+    return userModel.map(user -> new UserResponseDetailsDTO(user.getId(),
+      user.getUsername(), user.getRoles()));
   }
 
   @Override

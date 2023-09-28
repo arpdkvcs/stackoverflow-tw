@@ -9,6 +9,7 @@ import java.util.Set;
 public interface UserRoleDAO {
 
   Set<Role> readAllOfUser(Long userid) throws SQLException;
+
   void assignToUser(long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException;
 

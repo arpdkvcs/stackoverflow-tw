@@ -12,7 +12,15 @@ ORDER BY q.title ASC/*DESC*/;
 --ORDER BY answer_count DESC / ASC;
 
 --2. Detail page of a question shows who asked it and lists all answers with date and users
-SELECT q.id, q.title, q.content, q.created_at, ua.username, a.id, a.content, a.created_at, uq.username
+SELECT q.id,
+       q.title,
+       q.content,
+       q.created_at,
+       ua.username,
+       a.id,
+       a.content,
+       a.created_at,
+       uq.username
 FROM questions q
          INNER JOIN answers a ON q.id = a.question_id
          INNER JOIN users ua ON a.user_id = ua.id

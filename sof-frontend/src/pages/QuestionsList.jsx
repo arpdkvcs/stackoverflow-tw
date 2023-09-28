@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import publicFetch from "../utility/publicFetch";
 
 function QuestionsList() {
@@ -30,7 +30,7 @@ function QuestionsList() {
           <li key={question.id}>
             Title: {question.title} --- Content: {question.content}
           </li>
-        )):<h1>iz der eny kvescsön</h1>}
+        )) : <h1>iz der eny kvescsön</h1>}
       </ul>
     </div>
   );
