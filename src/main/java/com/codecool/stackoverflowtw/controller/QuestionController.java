@@ -65,7 +65,7 @@ public class QuestionController extends BaseController {
     }
   }
 
-  @PostMapping("/")
+  @PatchMapping ("/")
   public ResponseEntity<?> updateQuestion(@RequestBody UpdateQuestionDTO question) {
     try {
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),

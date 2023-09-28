@@ -37,19 +37,6 @@ public class TokenServiceImpl implements TokenService {
     this.userSessionDAO = userSessionDAO;
   }
 
-  private TokenUserInfoDTO parseUserInfoMap(Map<String, Object> userInfoMap) {
-    Long userid = ((Number) userInfoMap.get("userid")).longValue();
-    String username = userInfoMap.get("username").toString();
-
-    Set<String> rolesStrings = new HashSet<>((Collection<String>) userInfoMap.get("roles"));
-    Set<Role> roles = rolesStrings.stream()
-      .map(Role::valueOf)
-      .collect(Collectors.toSet());
-
-    return new TokenUserInfoDTO(userid, username, roles);
-  }
-
-
   @Override
   public String sign(TokenUserInfoDTO userInfo) throws RuntimeException {
     try {
@@ -60,6 +47,7 @@ public class TokenServiceImpl implements TokenService {
           userInfo.roles().stream()
             .map(Enum::toString)
             .toArray(String[]::new))
+        .withClaim("uuid", UUID.randomUUID().toString())
         .withExpiresAt(new Date(System.currentTimeMillis() + sessionTokenExpiration));
 
       return builder.sign(sessionTokenAlgorithm);
@@ -85,6 +73,7 @@ public class TokenServiceImpl implements TokenService {
       for (String hashedToken : hashedSessionTokens) {
         if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
           matchingToken = hashedToken;
+          break;
         }
       }
       if (matchingToken == null) {
@@ -110,6 +99,7 @@ public class TokenServiceImpl implements TokenService {
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void addToUser(long userid, String rawRefreshToken) throws SQLException {
     try {
       userSessionDAO.addToUser(userid, BCrypt.hashpw(rawRefreshToken, BCrypt.gensalt(4)));
@@ -128,6 +118,7 @@ public class TokenServiceImpl implements TokenService {
       for (String hashedToken : hashedSessionTokens) {
         if (BCrypt.checkpw(rawSessionToken, hashedToken)) {
           hashedTokenToRemove = hashedToken;
+          break;
         }
       }
       if (hashedTokenToRemove != null) {
