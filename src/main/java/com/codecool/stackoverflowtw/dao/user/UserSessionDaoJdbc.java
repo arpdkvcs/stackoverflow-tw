@@ -20,7 +20,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
   }
 
   @Override
-  public Set<String> readAllOfUser(long userid)
+  public Set<String> readAllOfUser(Long userid)
     throws SQLException, CannotGetJdbcConnectionException {
     Set<String> tokens = new HashSet<>();
     String sql = "SELECT token FROM user_sessions WHERE user_id = ?";
@@ -40,7 +40,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
   }
 
   @Override
-  public void addToUser(long userid, String hashedSessionToken)
+  public void addToUser(Long userid, String hashedSessionToken)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "INSERT INTO user_sessions (user_id, token) VALUES (?, ?)";
 
@@ -59,7 +59,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
   }
 
   @Override
-  public void removeFromUser(long userid, String hashedSessionToken)
+  public void removeFromUser(Long userid, String hashedSessionToken)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM user_sessions WHERE user_id = ? AND token = ?";
 
@@ -78,7 +78,7 @@ public class UserSessionDaoJdbc extends BaseDaoJdbc implements UserSessionDAO {
   }
 
   @Override
-  public void removeAllFromUser(long userid) throws SQLException, CannotGetJdbcConnectionException {
+  public void removeAllFromUser(Long userid) throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM user_sessions WHERE user_id = ?";
 
     Connection conn = DataSourceUtils.getConnection(dataSource);

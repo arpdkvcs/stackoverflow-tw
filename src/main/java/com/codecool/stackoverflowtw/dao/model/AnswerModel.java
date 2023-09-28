@@ -3,13 +3,13 @@ package com.codecool.stackoverflowtw.dao.model;
 import java.time.LocalDateTime;
 
 public class AnswerModel {
-    private final long id;
-    private final long userId;
-    private final long questionId;
+    private final Long id;
+    private final Long userId;
+    private final Long questionId;
     private final String content;
     private final LocalDateTime createdAt;
 
-    public AnswerModel(long id, long userId, long questionId, String content, LocalDateTime createdAt) {
+    public AnswerModel(Long id, Long userId, Long questionId, String content, LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.questionId = questionId;
@@ -17,15 +17,15 @@ public class AnswerModel {
         this.createdAt = createdAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public long getQuestionId() {
+    public Long getQuestionId() {
         return questionId;
     }
 

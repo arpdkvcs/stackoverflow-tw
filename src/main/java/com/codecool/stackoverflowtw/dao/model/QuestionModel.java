@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 public class QuestionModel {
 
-    private final long id;
+    private final Long id;
 
-    private final long userId;
+    private final Long userId;
 
     private final String title;
 
@@ -14,9 +14,9 @@ public class QuestionModel {
 
     private final LocalDateTime createdAt;
 
-    private final long acceptedAnswerId;
+    private final Long acceptedAnswerId;
 
-    public QuestionModel(long id, long userId, String title, String content, LocalDateTime createdAt, long acceptedAnswerId) {
+    public QuestionModel(Long id, Long userId, String title, String content, LocalDateTime createdAt, Long acceptedAnswerId) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -25,11 +25,11 @@ public class QuestionModel {
         this.acceptedAnswerId = acceptedAnswerId;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -45,7 +45,7 @@ public class QuestionModel {
         return createdAt;
     }
 
-    public long getAcceptedAnswerId() {
+    public Long getAcceptedAnswerId() {
         return acceptedAnswerId;
     }
 }

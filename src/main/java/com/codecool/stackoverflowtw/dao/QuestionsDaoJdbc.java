@@ -21,9 +21,9 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public void create(QuestionModel questionModel)
+    public int create(QuestionModel questionModel)
             throws SQLException, CannotGetJdbcConnectionException {
-        String sql = "INSERT INTO questions (user_id, title, content) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO questions (user_id, title, content) VALUES (?, ?, ?) RETURNING id;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -31,10 +31,12 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
             pstmt.setString(2, questionModel.getTitle());
             pstmt.setString(3, questionModel.getContent());
 
-            int affectedRow = pstmt.executeUpdate();
+            ResultSet resultSet = pstmt.executeQuery();
 
-            if (affectedRow == 0) {
+            if (!resultSet.next()) {
                 throw new SQLException("No record has been created in questions table.");
+            } else {
+                return resultSet.getInt("id");
             }
 
         } finally {
@@ -64,7 +66,7 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public QuestionModel readById(long questionId)
+    public QuestionModel readById(Long questionId)
             throws SQLException, CannotGetJdbcConnectionException {
         String sql = "SELECT * FROM questions WHERE id = ?;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -126,16 +128,14 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
             throws SQLException, CannotGetJdbcConnectionException {
         String sql = "UPDATE questions SET " +
                         "title = ?, " +
-                        "content = ?, " +
-                        "accepted_answer_id = ? " +
+                        "content = ? " +
                         "WHERE id = ?;";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, questionModel.getTitle());
             pstmt.setString(2, questionModel.getContent());
-            pstmt.setLong(3, questionModel.getAcceptedAnswerId());
-            pstmt.setLong(4, questionModel.getId());
+            pstmt.setLong(3, questionModel.getId());
 
             int affectedRows = pstmt.executeUpdate();
 
@@ -149,7 +149,7 @@ public class QuestionsDaoJdbc extends BaseDaoJdbc implements QuestionsDAO {
     }
 
     @Override
-    public void delete(long id)
+    public void delete(Long id)
             throws SQLException, CannotGetJdbcConnectionException {
         String sql = "DELETE FROM questions WHERE id = ?;";
         Connection conn = DataSourceUtils.getConnection(dataSource);

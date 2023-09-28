@@ -124,7 +124,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public Optional<User> readById(long id) throws SQLException, CannotGetJdbcConnectionException {
+  public Optional<User> readById(Long id) throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT u.id, u.username, u.password, r.name AS role_name, us.token AS token " +
       "FROM users u " +
       "LEFT JOIN user_roles ur ON u.id = ur.user_id " +
@@ -164,7 +164,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public void update(long id, String username, String hashedPassword)
+  public void update(Long id, String username, String hashedPassword)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "UPDATE users SET username = ?, password = ? WHERE id = ?;";
 
@@ -185,7 +185,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public void delete(long id) throws SQLException, CannotGetJdbcConnectionException {
+  public void delete(Long id) throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM users WHERE id = ?;";
     Connection conn = DataSourceUtils.getConnection(dataSource);
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -201,7 +201,7 @@ public class UserDaoJdbc extends BaseDaoJdbc implements UserDAO {
   }
 
   @Override
-  public String getUsernameById(long userId)
+  public String getUsernameById(Long userId)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT username FROM users WHERE id = ?;";
 

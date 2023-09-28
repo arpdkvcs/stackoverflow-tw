@@ -3,13 +3,13 @@ package com.codecool.stackoverflowtw.dao.user.model;
 import java.util.Set;
 
 public class User {
-  private final long id;
+  private final Long id;
   private String username;
   private String hashedPassword;
   private final Set<Role> roles;
   private final Set<String> hashedSessionTokens;
 
-  public User(long id, String username, String hashedPassword, Set<Role> roles, Set<String> hashedSessionTokens) {
+  public User(Long id, String username, String hashedPassword, Set<Role> roles, Set<String> hashedSessionTokens) {
     this.id = id;
     this.username = username;
     this.hashedPassword = hashedPassword;
@@ -17,7 +17,7 @@ public class User {
     this.hashedSessionTokens = hashedSessionTokens;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 

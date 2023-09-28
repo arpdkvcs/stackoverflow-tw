@@ -95,7 +95,7 @@ public abstract class BaseController {
   }
 
   //can be checked from the token directly (receivedRoles) or from the database with userId
-  protected boolean verifyRole(long userId, Role requiredRole, Set<Role> receivedRoles) {
+  protected boolean verifyRole(Long userId, Role requiredRole, Set<Role> receivedRoles) {
     try {
       if (receivedRoles != null) {
         return receivedRoles.contains(requiredRole);

@@ -30,7 +30,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public void createAnswer(NewAnswerDTO newAnswerDTO) throws SQLException {
         try {
-            AnswerModel answer = new AnswerModel(0, newAnswerDTO.userId(), 0, newAnswerDTO.content(), LocalDateTime.now());
+            AnswerModel answer = new AnswerModel(null, newAnswerDTO.userId(), newAnswerDTO.questionId(), newAnswerDTO.content(), LocalDateTime.now());
             answerDAO.insertAnswer(answer);
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
@@ -41,7 +41,7 @@ public class AnswerServiceImpl implements AnswerService {
     public void updateAnswer(UpdateAnswerDTO updateAnswerDTO) throws SQLException {
         try {
             answerDAO.updateAnswer(
-                    new AnswerModel(updateAnswerDTO.id(), -1, -1, updateAnswerDTO.content(), null));
+                    new AnswerModel(updateAnswerDTO.id(), null, null, updateAnswerDTO.content(), null));
         } catch (CannotGetJdbcConnectionException e) {
             throw new SQLException(e);
         }

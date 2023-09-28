@@ -7,15 +7,15 @@ import java.util.Set;
 
 public interface QuestionsDAO {
 
-    void create(QuestionModel questionModel) throws SQLException;
+    int create(QuestionModel questionModel) throws SQLException;
 
     Set<QuestionModel> readAll() throws SQLException;
 
-    QuestionModel readById(long questionId) throws SQLException;
+    QuestionModel readById(Long questionId) throws SQLException;
 
     Set<QuestionModel> readByTitle(String searchQuery) throws SQLException;
 
     void update(QuestionModel questionModel) throws SQLException;
 
-    void delete(long id) throws SQLException;
+    void delete(Long id) throws SQLException;
 }

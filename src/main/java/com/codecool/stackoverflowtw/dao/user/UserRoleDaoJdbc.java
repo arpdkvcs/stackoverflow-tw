@@ -21,7 +21,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
   }
 
   @Override
-  public Set<Role> readAllOfUser(long userid)
+  public Set<Role> readAllOfUser(Long userid)
     throws SQLException, CannotGetJdbcConnectionException {
     Set<Role> roles = new HashSet<>();
     String sql = "SELECT r.name " +
@@ -65,7 +65,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
   }
 
   @Override
-  public void removeFromUser(long userid, Role role)
+  public void removeFromUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "DELETE FROM user_roles WHERE user_id = ? " +
       "AND role_id IN (SELECT id FROM roles WHERE name = ?)";
@@ -86,7 +86,7 @@ public class UserRoleDaoJdbc extends BaseDaoJdbc implements UserRoleDAO {
   }
 
   @Override
-  public boolean verifyRoleOfUser(long userid, Role role)
+  public boolean verifyRoleOfUser(Long userid, Role role)
     throws SQLException, CannotGetJdbcConnectionException {
     String sql = "SELECT r.name " +
       "FROM roles r " +

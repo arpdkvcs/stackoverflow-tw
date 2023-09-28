@@ -8,8 +8,9 @@ import com.codecool.stackoverflowtw.service.user.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5000")
 @RestController
-@RequestMapping("/answers")
+@RequestMapping("api/answers")
 public class AnswerController extends BaseController {
     private final AnswerService answerService;
 
@@ -21,7 +22,7 @@ public class AnswerController extends BaseController {
   }
 
   //Create an answer
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> createAnswer(@RequestBody NewAnswerDTO newAnswerDTO) {
         try {
             answerService.createAnswer(newAnswerDTO);
@@ -32,7 +33,7 @@ public class AnswerController extends BaseController {
     }
 
     //update an answer
-    @PutMapping
+    @PatchMapping("")
     public ResponseEntity<?> updateAnswer(@RequestBody UpdateAnswerDTO updateAnswerDTO) {
         try {
             answerService.updateAnswer(updateAnswerDTO);
@@ -54,7 +55,7 @@ public class AnswerController extends BaseController {
     }
 
   /*
-    //TODO: get answers by question ID
+    //TODO: get all answers by question ID
     //Is it needed for our app? If it is, I don't have any idea for it sadly
     @GetMapping
     public ResponseEntity<List<AnswerResponseDetailsDTO>> getAnswerByQuestionId(@PathVariable long questionId) {

@@ -4,5 +4,5 @@ import com.codecool.stackoverflowtw.dao.user.model.Role;
 
 import java.util.Set;
 
-public record LoginResponseDTO(long userid, String username, Set<Role> roles, String sessionToken) {
+public record LoginResponseDTO(Long userid, String username, Set<Role> roles, String sessionToken) {
 }
