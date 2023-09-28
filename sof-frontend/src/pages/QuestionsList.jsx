@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import publicFetch from "../utility/publicFetch";
+import QuestionTable from "../components/QuestionTable";
 
 function QuestionsList() {
   const [questions, setQuestions] = useState([]);
@@ -33,26 +34,12 @@ function QuestionsList() {
   }
 
   return (
-    <div>
-      {error && <p>Error: {error}</p>}
-      Search: <input type=search onChange={handleSearch}></input>
-      <h2>Browse questions</h2>
-      <table>
-        <tr>
-          <th>Title</th>
-          <th>Date</th>
-          <th>Asked by</th>
-        </tr>
-        {filteredQuestions?.length ? filteredQuestions.map( (question) => (
-          <tr key={question.id}>
-            <td>{question.title}</td>
-            <td>{question.createdAt}</td>
-            <td>{question.username}</td>
-          </tr>
-        )):<h1>No questions</h1>}
-      </table>
-    </div>
-  );
+      <div>
+        Search: <input type=text onChange={(e) => handleSearch(e)} value={search}></input>
+        <QuestionTable question={filteredQuestions}/>
+      </div>
+  )
+
 }
 
 export default QuestionsList;
