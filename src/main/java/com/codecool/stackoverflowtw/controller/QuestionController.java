@@ -5,31 +5,24 @@ import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
 import com.codecool.stackoverflowtw.service.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
 @RestController
 @RequestMapping("api/questions")
-public class QuestionController {
+public class QuestionController extends BaseController {
   private final QuestionService questionService;
-  private final TokenService tokenService;
-  private final AccessControlService accessControlService;
 
-  private final Logger logger;
-
-  @Autowired
-  public QuestionController(QuestionService questionService, TokenService tokenService, AccessControlService accessControlService) {
+  public QuestionController(TokenService tokenService,
+                            AccessControlService accessControlService,
+                            QuestionService questionService) {
+    super(tokenService, accessControlService);
     this.questionService = questionService;
-    this.tokenService = tokenService;
-    this.accessControlService = accessControlService;
-    logger = LoggerFactory.getLogger(this.getClass());
   }
 
   @GetMapping("/all")
@@ -38,80 +31,58 @@ public class QuestionController {
       return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
         "data", questionService.getAllQuestions()));
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-        HttpStatus.BAD_REQUEST.value(), "error", "Failed to retrieve questions."));
+      return handleBadRequest("Failed to retrieve questions.", e);
     }
   }
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getQuestionById(@PathVariable int id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                    "data", questionService.getQuestionById(id)));
 
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to retrieve question."));
-        }
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getQuestionById(@PathVariable int id) {
+    try {
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "data", questionService.getQuestionById(id)));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to retrieve question.", e);
     }
+  }
 
-    @GetMapping("/search/questions/{searchQuery}")
-    public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                    "data", questionService.getQuestionsByTitle(searchQuery)));
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to perform search."));
-        }
+  @GetMapping("/search/questions/{searchQuery}")
+  public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
+    try {
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "data", questionService.getQuestionsByTitle(searchQuery)));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to perform search.", e);
     }
+  }
 
-    @PostMapping("/")
-    public ResponseEntity<?> addNewQuestion(@RequestBody NewQuestionDTO question) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                    "data", questionService.addNewQuestion(question)));
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to post new question."));
-        }
+  @PostMapping("/")
+  public ResponseEntity<?> addNewQuestion(@RequestBody NewQuestionDTO question) {
+    try {
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "data", questionService.addNewQuestion(question)));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to post new question.", e);
     }
+  }
 
-    @PostMapping("/")
-    public ResponseEntity<?> updateQuestion(@RequestBody UpdateQuestionDTO question) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                    "data", questionService.updateQuestion(question)));
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to update question."));
-        }
+  @PostMapping("/")
+  public ResponseEntity<?> updateQuestion(@RequestBody UpdateQuestionDTO question) {
+    try {
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "data", questionService.updateQuestion(question)));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to update question.", e);
     }
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteQuestionById(@PathVariable long id) {
-        try {
-            questionService.deleteQuestionById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                    "message", "Question has been deleted."));
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status",
-                    HttpStatus.BAD_REQUEST.value(), "error", "Failed to delete question."));
-        }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteQuestionById(@PathVariable long id) {
+    try {
+      questionService.deleteQuestionById(id);
+      return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
+        "message", "Question has been deleted."));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to delete question.", e);
     }
+  }
 }
