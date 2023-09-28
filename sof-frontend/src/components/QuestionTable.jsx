@@ -17,7 +17,7 @@ export default function QuestionTable({ questions, search }) {
                     <td>{question.title}</td>
                     <td>{question.createdAt}</td>
                     <td>{question.username}</td>
-                    <td><Link to={`/questiondetails/${id}`}><button>Details</button></Link></td>
+                    <td><Link to={`/questiondetails/${question.id}`}><button>Details</button></Link></td>
 
                 </tr>
             )):<h1>No questions</h1>}

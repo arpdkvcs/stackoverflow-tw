@@ -11,7 +11,7 @@ function Layout() {
             <button>Home</button>
           </Link>
           <Link to="/questions">
-            <button>Question</button>
+            <button>Questions</button>
           </Link>
         </nav>
       </header>

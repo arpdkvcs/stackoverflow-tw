@@ -15,6 +15,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
 import UserSignUp from "./pages/UserSignUp";
+import QuestionDetail from "./pages/QuestionDetail";
 
 const router = createBrowserRouter([
   /* public */
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/questions",
         element: <QuestionsList />
+      },
+      {
+        path: "/questiondetails/:id",
+        element: <QuestionDetail />
       },
       {
         path:"/login",
