@@ -54,9 +54,7 @@ public class AnswerController extends ControllerBase {
         }
     }
 
-
-    //TODO: get all answers by question ID
-    //Is it needed for our app? If it is, I don't have any idea for it sadly
+    //Get all answers for a specific question
     @GetMapping("/{questionId}")
     public ResponseEntity<?> getAnswerByQuestionId(@PathVariable Long questionId) {
         try {
