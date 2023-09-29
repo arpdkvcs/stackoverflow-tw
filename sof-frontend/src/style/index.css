@@ -1,5 +1,6 @@
 html, body {
   padding: 20px;
+  padding-top: 10px;
   position: relative;
   min-height: 100%;
   margin: 0;
@@ -12,10 +13,9 @@ html, body {
 
 html::after {
   content: "";
-  background-image: url("https://i.imgur.com/ITepab9.jpg");
+  background-image: url("https://i.imgur.com/LFui0mx.jpg");
   background-size: cover;
   background-position: right bottom;
-  opacity: 0.75;
   top: 0;
   left: 0;
   bottom: 0;
@@ -64,7 +64,7 @@ input[type="password"] {
 button {
   margin-right: 5px;
   margin-bottom: 5px;
-  background-color: #007bff;
+  background-color: #00008b;
   color: white;
   padding: 10px 20px;
   border: none;
