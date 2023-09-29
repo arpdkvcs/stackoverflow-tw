@@ -14,40 +14,39 @@ export default function QuestionDetail() {
   const navigate = useNavigate();
   const fetchWithAuth = UseAuthFetch();
 
+
+  async function fetchQuestionDetails() {
+    try {
+      const responseObject = await publicFetch(`questions/${id}`);
+      if (!responseObject?.data) {
+        throw new Error(responseObject?.error ?? "Failed to load question");
+      }
+      console.log(responseObject.data);
+      setQuestion(responseObject.data);
+    } catch (e) {
+      setQuestion(null);
+      console.error(e);
+    }
+  }
+
   useEffect(() => {
     console.log(id);
-
-    async function fetchQuestionDetails() {
-      try {
-        const responseObject = await publicFetch(`questions/${id}`);
-        if (!responseObject?.data) {
-          throw new Error(responseObject?.error ?? "Failed to load question");
-        }
-        console.log(responseObject.data);
-        setQuestion(responseObject.data);
-      } catch (e) {
-        setQuestion(null);
-        console.error(e);
-      }
-    }
-
     id && fetchQuestionDetails();
   }, []);
 
-  async function handleDeleteQuestion() {
+  async function handleDelete(path) {
     try {
-      const confirmed = window.confirm("Are you sure you want to delete this question?");
+      const confirmed = window.confirm("Are you sure you want to delete?");
       if (!confirmed) {
         return;
       }
 
-      const responseObject = await fetchWithAuth(`questions/${id}`, "DELETE");
+      const responseObject = await fetchWithAuth(`${path}`, "DELETE");
 
       if (responseObject?.message) {
         window.alert(responseObject.message);
-        navigate("/user");
       } else {
-        throw new Error(responseObject?.error ?? "Failed to load question");
+        throw new Error(responseObject?.error ?? "Failed to delete");
       }
     } catch (e) {
       console.error(e);
@@ -64,7 +63,12 @@ export default function QuestionDetail() {
           <Link to={`/user/questions/edit/${id}`}>
             <button>Edit question</button>
           </Link>
-          <button onClick={handleDeleteQuestion}>Delete question</button>
+          <button onClick={() => {
+            handleDelete(`questions/${id}`).then(() => {
+              navigate("/user");
+            });
+          }}>Delete question
+          </button>
         </div> : <></>}
         <h2>Answers:</h2>
         {question?.answers?.length > 0 ? <div>
@@ -73,9 +77,17 @@ export default function QuestionDetail() {
               <li key={answer.id}>
                 {answer.content}
                 {auth?.userid && auth?.username === answer?.username
-                  ? <Link to={`/user/questions/editanswer/${answer.id}`}>
-                    <button>Edit answer</button>
-                  </Link>
+                  ? <div>
+                    <Link to={`/user/questions/editanswer/${answer.id}`}>
+                      <button>Edit answer</button>
+                    </Link>
+                    <button onClick={() => {
+                      handleDelete(`answers/${answer.id}`).then(()=>{
+                        fetchQuestionDetails();
+                      });
+                    }}>Delete answer
+                    </button>
+                  </div>
                   : <></>}
               </li>)}
           </ul>
