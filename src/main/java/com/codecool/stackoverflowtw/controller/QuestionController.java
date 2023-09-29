@@ -1,13 +1,17 @@
 package com.codecool.stackoverflowtw.controller;
 
 import com.codecool.stackoverflowtw.controller.dto.question.NewQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.question.QuestionResponseDetailsDTO;
 import com.codecool.stackoverflowtw.controller.dto.question.UpdateQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.user.TokenUserInfoDTO;
 import com.codecool.stackoverflowtw.service.question.QuestionService;
 import com.codecool.stackoverflowtw.service.user.AccessControlService;
 import com.codecool.stackoverflowtw.service.user.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @CrossOrigin(origins = "http://localhost:5000")
@@ -42,7 +46,7 @@ public class QuestionController extends ControllerBase {
   }
 
   @GetMapping("/user/{userid}")
-  public ResponseEntity<?> getQuestionByUserId(@PathVariable Long userid) {
+  public ResponseEntity<?> getQuestionByUserId(@PathVariable Long userid, HttpServletRequest request) {
     try {
       return handleOkData("Successful request", questionService.getQuestionsByUserId(userid));
     } catch (Exception e) {
@@ -63,25 +67,12 @@ public class QuestionController extends ControllerBase {
   public ResponseEntity<?> addNewQuestion(
     HttpServletRequest request, @RequestBody NewQuestionDTO newQuestionDTO) {
     try {
-      /*
       Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
-
       if (userInfo.isPresent()) {
-        NewQuestionDTO question = new NewQuestionDTO(
-                userInfo.get().userid(),
-                body.get("title").toString(),
-                body.get("content").toString()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-                "data", questionService.addNewQuestion(question)));
+        return handleOkData("Successful request", questionService.addNewQuestion(newQuestionDTO));
       } else {
         return handleUnauthorized("Unauthorized", null);
       }
-
-       */
-
-      return handleOkData("Successful request", questionService.addNewQuestion(newQuestionDTO));
-
     } catch (Exception e) {
       return handleBadRequest("Failed to post new question.", e);
     }
@@ -91,35 +82,30 @@ public class QuestionController extends ControllerBase {
   public ResponseEntity<?> updateQuestion(
     HttpServletRequest request, @RequestBody UpdateQuestionDTO updateQuestionDTO) {
     try {
-      /*
       Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
-      if (userInfo.isPresent()) {
-
-        UpdateQuestionDTO question = new UpdateQuestionDTO((long) body.get("id"),
-          userInfo.get().userid(),
-          body.get("title").toString(), body.get("content").toString(),
-          (long) body.get("acceptedAnswerId"));
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("status", HttpStatus.OK.value(),
-          "data", questionService.updateQuestion(question)));
-
+      if (userInfo.isPresent() && userInfo.get().userid() == updateQuestionDTO.userId()) {
+        return handleOkData("Successful request",
+          questionService.updateQuestion(updateQuestionDTO));
       } else {
         return handleUnauthorized("Unauthorized", null);
       }
-
-       */
-
-      return handleOkData("Successful request", questionService.updateQuestion(updateQuestionDTO));
-
     } catch (Exception e) {
       return handleBadRequest("Failed to update question.", e);
     }
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteQuestionById(@PathVariable Long id) {
+  public ResponseEntity<?> deleteQuestionById(@PathVariable Long id, HttpServletRequest request) {
     try {
-      questionService.deleteQuestionById(id);
-      return handleOkMessage("Question has been deleted.");
+      Optional<TokenUserInfoDTO> userInfo = verifyToken(request);
+      if (userInfo.isPresent()) {
+        QuestionResponseDetailsDTO details = questionService.getQuestionById(id);
+        if (true) {
+          questionService.deleteQuestionById(id);
+          return handleOkMessage("Question has been deleted.");
+        }
+      }
+      return handleUnauthorized("Unauthorized", null);
     } catch (Exception e) {
       return handleBadRequest("Failed to delete question.", e);
     }
