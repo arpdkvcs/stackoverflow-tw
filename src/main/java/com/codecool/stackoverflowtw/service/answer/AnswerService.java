@@ -15,5 +15,6 @@ public interface AnswerService {
   void deleteAnswer(long id) throws SQLException;
 
   List<AnswerResponseDetailsDTO> getAnswerByQuestionId(long questionId) throws SQLException;
+  AnswerResponseDetailsDTO getAnswerById(long answerId) throws SQLException;
 
 }

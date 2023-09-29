@@ -159,7 +159,33 @@ public class AnswerDaoJdbc extends BaseDaoJdbc implements AnswerDAO {
 
   @Override
   public List<AnswerModel> getAnswerByQuestionId(Long questionId) {
-    //TODO: impl
+    //TODO: impl (???????)
+    return null;
+  }
+
+  @Override
+  public AnswerModel getAnswerById(Long answerId) throws SQLException,
+    CannotGetJdbcConnectionException {
+    String sql = "SELECT * FROM answers WHERE id=?";
+
+    Connection conn = DataSourceUtils.getConnection(dataSource);
+    try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+      preparedStatement.setLong(1, answerId);
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      if (resultSet.next()) {
+        return new AnswerModel(
+          resultSet.getLong("id"),
+          resultSet.getLong("user_id"),
+          resultSet.getLong("question_id"),
+          resultSet.getString("content"),
+          resultSet.getTimestamp("created_at").toLocalDateTime()
+        );
+      }
+    } finally {
+      releaseConnectionIfNoTransaction(conn);
+    }
     return null;
   }
 }

@@ -37,15 +37,25 @@ export default function QuestionDetail() {
         <h2>{question.title}</h2>
         <p>{question.content}</p>
         <p>Asked by: {question.username}</p>
+        {question?.username === auth?.username ?
+          <Link to={`/user/questions/edit/${id}`}><button>Edit question</button></Link> : <></>}
         <h2>Answers:</h2>
         {question?.answers?.length > 0 ? <div>
           <ul>
-            {question.answers.map(answer => <li key={answer.id}>{answer.content}</li>)}
+            {question.answers.map(answer =>
+              <li key={answer.id}>
+                {answer.content}
+                {auth?.userid && auth?.username === answer?.username
+                  ? <Link to={`/user/questions/editanswer/${answer.id}`}>
+                    <button>Edit answer</button>
+                  </Link>
+                  : <></>}
+              </li>)}
           </ul>
         </div> : <h3>No answers yet!</h3>}
-        {auth?.userid?<Link to={`/user/questions/addanswer/${question.id}`}>
+        {auth?.userid ? <Link to={`/user/questions/addanswer/${question.id}`}>
           <button>Add answer</button>
-        </Link>:<></>}
+        </Link> : <></>}
       </div>
     );
   } else {

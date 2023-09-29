@@ -54,6 +54,16 @@ public class AnswerController extends ControllerBase {
         }
     }
 
+  //Get one answer by id.. sry don't want to modify the other one but that should be renamed...
+  @GetMapping("/id/{answerId}")
+  public ResponseEntity<?> getAnswerById(@PathVariable Long answerId) {
+    try {
+      return handleOkData("Fetched answers for question", answerService.getAnswerById(answerId));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to fetch answers for this question", e);
+    }
+  }
+
     //Get all answers for a specific question
     @GetMapping("/{questionId}")
     public ResponseEntity<?> getAnswerByQuestionId(@PathVariable Long questionId) {
