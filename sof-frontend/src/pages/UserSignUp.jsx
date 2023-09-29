@@ -16,7 +16,7 @@ function UserSignUp() {
     e.preventDefault();
     const data = { "username": username, "password": password };
     try {
-      const jsonResponse = await publicFetch("/auth/register", "POST", data);
+      const jsonResponse = await publicFetch("auth/register", "POST", data);
       setUserName("");
       setPassword("");
       if (jsonResponse.message) {
@@ -28,6 +28,7 @@ function UserSignUp() {
     } catch (error) {
       setRegistrationSuccess(false);
       console.error(error);
+      window.alert(`Registration failed`);
     }
   };
 
