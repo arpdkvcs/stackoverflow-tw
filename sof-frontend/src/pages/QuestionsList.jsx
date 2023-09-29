@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import publicFetch from "../utility/publicFetch";
 import QuestionTable from "../components/QuestionTable";
 import useAuth from "../utility/useAuth";
+import {useLocation} from "react-router-dom";
 
 function QuestionsList() {
   const [questions, setQuestions] = useState([]);
@@ -9,17 +10,22 @@ function QuestionsList() {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [search, setSearch] = useState("");
   const {auth} = useAuth();
+  const location = useLocation();
+  console.log(location);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        //example of using the public endpoint fetch function
-        const responseObject = await publicFetch("questions/all");
+        const path = (location.pathname.toString() === "/user/myquestions")
+          ? `questions/user/${auth.userid}`
+          : "questions/all";
+
+        const responseObject = await publicFetch(path);
         if (!responseObject?.data) {
           throw new Error(responseObject?.error ?? "Failed to load questions");
         }
         const data = responseObject.data;
-        console.log(data);
+
         setQuestions(data);
         setFilteredQuestions(data);
       } catch (error) {
@@ -27,7 +33,7 @@ function QuestionsList() {
       }
     };
     fetchQuestions();
-  }, []);
+  }, [location]);
 
   function handleSearch(e) {
     setSearch(e.target.value);
@@ -44,7 +50,7 @@ function QuestionsList() {
     }} value={search}></input>
       {questions?.length ?
         <QuestionTable questions={filteredQuestions}
-                       questionDetailsPath={auth?.userid?"user/questions":"questions"}/> :
+                       questionDetailsPath={auth?.userid ? "user/questions" : "questions"}/> :
         <h3>No questions found</h3>}
     </div>
   );

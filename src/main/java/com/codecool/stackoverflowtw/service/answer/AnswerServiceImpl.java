@@ -74,5 +74,15 @@ public class AnswerServiceImpl implements AnswerService {
     return responseList;
   }
 
-
+  @Override
+  public AnswerResponseDetailsDTO getAnswerById(long answerId) throws SQLException {
+    try {
+      AnswerModel answerModel = answerDAO.getAnswerById(answerId);
+      return new AnswerResponseDetailsDTO(
+        answerModel.getId(), answerModel.getContent(), answerModel.getCreatedAt(), null
+      ); //TODO: why does this need username and no userid?
+    } catch (CannotGetJdbcConnectionException e) {
+      throw new SQLException(e);
+    }
+  }
 }

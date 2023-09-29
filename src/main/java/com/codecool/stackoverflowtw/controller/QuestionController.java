@@ -41,6 +41,15 @@ public class QuestionController extends ControllerBase {
     }
   }
 
+  @GetMapping("/user/{userid}")
+  public ResponseEntity<?> getQuestionByUserId(@PathVariable Long userid) {
+    try {
+      return handleOkData("Successful request", questionService.getQuestionsByUserId(userid));
+    } catch (Exception e) {
+      return handleBadRequest("Failed to get questions of user", e);
+    }
+  }
+
   @GetMapping("/search/{searchQuery}")
   public ResponseEntity<?> getQuestionsByTitle(@PathVariable String searchQuery) {
     try {

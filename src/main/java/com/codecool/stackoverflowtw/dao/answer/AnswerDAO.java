@@ -1,6 +1,7 @@
 package com.codecool.stackoverflowtw.dao.answer;
 
 import com.codecool.stackoverflowtw.dao.model.AnswerModel;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,4 +27,6 @@ public interface AnswerDAO {
   Set<Long> getAnswersIdsForQuestion(Long questionId) throws SQLException;
 
   List<AnswerModel> getAnswerByQuestionId(Long questionId);
+  AnswerModel getAnswerById(Long answerId) throws SQLException,
+  CannotGetJdbcConnectionException;
 }
