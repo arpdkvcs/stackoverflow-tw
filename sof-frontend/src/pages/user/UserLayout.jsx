@@ -13,7 +13,10 @@ function UserLayout() {
         {auth?.username && <h3>Welcome {auth.username}!</h3>}
         <nav>
           <Link to="/user">
-            <button>Questions</button>
+            <button>All Questions</button>
+          </Link>
+          <Link to="/user/myquestions">
+            <button>My questions</button>
           </Link>
           <Link to="/user/questions/add">
             <button>Add new question</button>

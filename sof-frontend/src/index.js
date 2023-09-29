@@ -58,6 +58,10 @@ const router = createBrowserRouter([
             element: <QuestionsList/>
           },
           {
+            path: "/user/myquestions",
+            element: <QuestionsList/>
+          },
+          {
             path: "/user/questions/add",
             element: <AddQuestion/>
           },
