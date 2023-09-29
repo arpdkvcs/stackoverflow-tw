@@ -110,7 +110,7 @@ public class AuthenticationController extends ControllerBase {
 
       removeSessionCookie(response);
 
-      return handleOkMessage("UserModel account logged out successfully");
+      return handleOkMessage("Account logged out successfully");
     } catch (Exception e) {
       removeSessionCookie(response);
       return handleBadRequest("Logout failed for user account", e);
