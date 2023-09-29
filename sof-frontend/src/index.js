@@ -4,19 +4,18 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
 import "./style/index.css";
 import {AuthProvider} from "./context/AuthProvider";
-import RequireAuth from "./pages/RequireAuth";
+import RequireAuth from "./components/RequireAuth";
 import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import QuestionsList from "./pages/QuestionsList";
-
-import UserQuestions from "./pages/user/UserQuestions";
 import AdminPage from "./pages/admin/AdminPage";
 import NotFound from "./pages/NotFound";
 import UserSignIn from "./pages/UserSignIn";
 import UserSignUp from "./pages/UserSignUp";
 import QuestionDetail from "./pages/QuestionDetail";
 import UserLayout from "./pages/user/UserLayout";
-import UserQuestionDetail from "./pages/user/UserQuestionDetails";
+import AddAnswer from "./pages/AddAnswer";
+import AddQuestion from "./pages/AddQuestion";
 
 const router = createBrowserRouter([
   /* public */
@@ -54,11 +53,19 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <UserQuestions/>
+            element: <QuestionsList/>
+          },
+          {
+            path: "/user/questions/add",
+            element: <AddQuestion/>
           },
           {
             path: "/user/questions/:id",
-            element: <UserQuestionDetail/>
+            element: <QuestionDetail/>
+          },
+          {
+            path: "/user/questions/addanswer/:id",
+            element: <AddAnswer/>
           }
         ]
       }
