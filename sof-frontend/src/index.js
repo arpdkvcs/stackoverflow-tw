@@ -16,7 +16,7 @@ import QuestionDetail from "./pages/QuestionDetail";
 import UserLayout from "./pages/user/UserLayout";
 import AddAnswer from "./pages/AddAnswer";
 import AddQuestion from "./pages/AddQuestion";
-import EditAnswer from  "./pages/EditAnswer";
+import EditAnswer from "./pages/EditAnswer";
 import EditQuestion from "./pages/EditQuestion";
 
 const router = createBrowserRouter([

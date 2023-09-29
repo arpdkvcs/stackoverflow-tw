@@ -33,7 +33,7 @@ export default function EditAnswer() {
     id && loadAnswerById()
   }, []);
 
-  async function postAnswer(answerId, userId, content) {
+  async function editAnswer(answerId, userId, content) {
     try {
       const responseObject = await fetchWithAuth(
         `answers`,
@@ -42,7 +42,7 @@ export default function EditAnswer() {
       );
       if (responseObject?.message) {
         window.alert(responseObject.message);
-        navigate(`/user/questions/${id}`);
+        navigate(-1);
       } else {
         throw new Error("Failed to edit answer");
       }
@@ -55,7 +55,7 @@ export default function EditAnswer() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const answer = Object.fromEntries(formData.entries());
-    postAnswer(id, auth?.userid, answer?.content);
+    editAnswer(id, auth?.userid, answer?.content);
   }
 
   return (
